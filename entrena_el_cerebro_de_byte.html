@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Entrena el cerebro de Byte</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f4f7fb;color:#172033;margin:0}main{max-width:900px;margin:auto;padding:20px}.box{background:#fff;border:1px solid #d9e1ec;border-radius:18px;padding:18px;margin-bottom:16px}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.badge{background:#5b5bd6;color:#fff;padding:8px 12px;border-radius:999px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.animal{text-align:center;padding:28px;border:2px dashed #d9e1ec;border-radius:16px}.emoji{font-size:76px}.name{font-size:22px;font-weight:bold}.muted{color:#5d6b82}button{padding:14px;border-radius:12px;border:1px solid #d9e1ec;background:#fff;font-weight:bold;font-size:18px;cursor:pointer}button:hover{background:#eef0ff}.primary{background:#5b5bd6;color:#fff}.hidden{display:none}.feedback{margin-top:12px;padding:12px;border:1px solid #d9e1ec;border-radius:12px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{text-align:center;background:#fff;border:1px solid #d9e1ec;border-radius:14px;padding:12px}.stat b{display:block;font-size:24px;margin-top:5px}.home-link{display:inline-block;text-decoration:none;padding:10px 14px;border-radius:12px;background:#eef0ff;color:#3730a3;font-weight:bold;border:1px solid #c7d2fe}.home-link:hover{background:#dfe3ff}@media(max-width:700px){.stats{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body><main>
+<div style="margin-bottom:12px"><a class="home-link" href="index.html">← Volver a la Academia de IA</a></div>
+<div class="box top"><div><h1>Entrena el cerebro de Byte</h1><p class="muted">Enséñale ejemplos y comprueba si aprende a distinguir perros y gatos.</p></div><div class="badge" id="phase">Entrenamiento</div></div>
+<div class="stats"><div class="stat">Vistos<b id="seen">0</b></div><div class="stat">Aciertos<b id="ok">0</b></div><div class="stat">Perros<b id="dogs">0</b></div><div class="stat">Gatos<b id="cats">0</b></div></div>
+<div class="box">
+<div class="top"><h2 id="title">Ejemplo 1 de 8</h2><span class="badge" id="mode">Aprender</span></div>
+<div class="animal"><div class="emoji" id="emoji">🐶</div><div class="name" id="name">Cachorro marrón</div><p class="muted" id="clue">Tiene hocico largo, orejas caídas y ladra.</p></div>
+<p style="text-align:center;font-weight:bold" id="question">¿Qué etiqueta debe aprender Byte?</p>
+<div class="grid"><button id="dog">🐶 Perro</button><button id="cat">🐱 Gato</button></div>
+<div id="feedback" class="feedback hidden"></div>
+<div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap"><button id="next" class="primary hidden">Siguiente</button><button id="reset">Reiniciar</button></div>
+</div>
+<div class="box"><h3>Idea clave</h3><p>Una IA aprende viendo muchos ejemplos bien clasificados. Después usa los patrones aprendidos para intentar reconocer casos nuevos. Puede equivocarse.</p></div>
+<div class="box hidden" id="result"><h2>Resultado final</h2><p id="resultText"></p></div>
+</main>
+<script>
+const train=[
+['🐶','Cachorro marrón','Tiene hocico largo, orejas caídas y ladra.','dog'],['🐱','Gato gris','Tiene bigotes, orejas puntiagudas y maúlla.','cat'],['🐕','Perro grande','Tiene patas largas, mueve la cola y ladra.','dog'],['🐈','Gata naranja','Tiene bigotes y camina sigilosa.','cat'],['🐩','Perro rizado','Tiene hocico y ladra.','dog'],['🐈‍⬛','Gato negro','Tiene bigotes y maúlla.','cat'],['🐕‍🦺','Perro con arnés','Tiene hocico largo y ladra.','dog'],['😺','Gato de cara redonda','Tiene bigotes y maúlla.','cat']];
+const test=[['🐾','Animal misterioso A','Tiene bigotes y maúlla.','cat'],['🐾','Animal misterioso B','Mueve la cola y ladra.','dog'],['🐾','Animal misterioso C','Tiene orejas puntiagudas y maúlla.','cat'],['🐾','Animal misterioso D','Tiene hocico y ladra.','dog']];
+let phase='train',i=0,seen=0,ok=0,dogs=0,cats=0,testOk=0,locked=false;const $=id=>document.getElementById(id);
+function item(){return phase==='train'?train[i]:test[i]}
+function render(){const x=item();$('emoji').textContent=x[0];$('name').textContent=x[1];$('clue').textContent=x[2];$('feedback').classList.add('hidden');$('next').classList.add('hidden');locked=false;$('phase').textContent=phase==='train'?'Entrenamiento':'Prueba';$('mode').textContent=phase==='train'?'Aprender':'Predecir';$('title').textContent=(phase==='train'?'Ejemplo ':'Caso ')+(i+1)+' de '+(phase==='train'?train.length:test.length);$('question').textContent=phase==='train'?'¿Qué etiqueta debe aprender Byte?':'¿Qué debería responder la IA?'}
+function stats(){$('seen').textContent=seen;$('ok').textContent=ok;$('dogs').textContent=dogs;$('cats').textContent=cats}
+function answer(choice){if(locked)return;locked=true;const x=item(),right=choice===x[3];$('feedback').classList.remove('hidden');if(phase==='train'){seen++;if(right)ok++;if(x[3]==='dog')dogs++;else cats++;$('feedback').innerHTML=right?'<b>¡Correcto!</b> Byte guarda este ejemplo.':'<b>Etiqueta incorrecta.</b> Si los datos están mal clasificados, la IA aprende mal.'}else{if(right)testOk++;$('feedback').innerHTML=right?'<b>¡Predicción correcta!</b>':'<b>Predicción incorrecta.</b> La IA también puede equivocarse.'}stats();$('next').textContent=phase==='train'&&i===train.length-1?'Probar la IA':phase==='test'&&i===test.length-1?'Ver resultado':'Siguiente';$('next').classList.remove('hidden')}
+function next(){if(phase==='train'&&i<train.length-1){i++;render();return}if(phase==='train'){phase='test';i=0;render();return}if(i<test.length-1){i++;render();return}$('result').classList.remove('hidden');$('resultText').textContent='Byte acertó '+testOk+' de '+test.length+' casos nuevos. Cuantos mejores, más variados y más equilibrados sean los ejemplos, mejor podrá aprender.';$('next').classList.add('hidden');$('phase').textContent='Misión completada'}
+function reset(){phase='train';i=0;seen=0;ok=0;dogs=0;cats=0;testOk=0;$('result').classList.add('hidden');stats();render()}
+$('dog').addEventListener('click',()=>answer('dog'));$('cat').addEventListener('click',()=>answer('cat'));$('next').addEventListener('click',next);$('reset').addEventListener('click',reset);render();stats();
+</script></body></html>
