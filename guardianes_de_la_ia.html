@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Guardianes de la IA: privacidad, imágenes y decisiones</title>
+<style>
+:root{--bg:#ecfeff;--card:#fff;--ink:#16323d;--muted:#5f7580;--primary:#0f766e;--primary2:#14b8a6;--blue:#2563eb;--green:#15803d;--red:#dc2626;--amber:#d97706;--line:#99f6e4}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#ccfbf1 0,#f0fdfa 34%,#fff 100%);color:var(--ink);font-family:Arial,Helvetica,sans-serif;min-height:100vh}
+main{max-width:980px;margin:auto;padding:20px}.topbar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.back{display:inline-block;text-decoration:none;color:#fff;background:#334155;padding:10px 16px;border-radius:999px;font-weight:700}.score{background:#fff;border:2px solid var(--line);border-radius:999px;padding:10px 16px;font-weight:800}
+.hero{background:var(--card);border:3px solid var(--line);border-radius:28px;padding:24px;box-shadow:0 18px 45px rgba(15,118,110,.14);text-align:center}h1{margin:0 0 10px;font-size:clamp(30px,6vw,48px)}
+.lead{font-size:19px;color:var(--muted);max-width:760px;margin:0 auto 16px;line-height:1.5}.badges{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}.badge{background:#ccfbf1;color:#115e59;padding:8px 12px;border-radius:999px;font-weight:700}
+.panel{background:#fff;border:2px solid #dbeafe;border-radius:22px;padding:20px;margin-top:18px;box-shadow:0 10px 26px rgba(15,23,42,.06)}.panel h2{margin-top:0;font-size:27px}.mission{color:#0f766e;font-weight:800;letter-spacing:.04em;text-transform:uppercase;font-size:14px}
+.story{background:#f8fafc;border:2px dashed #5eead4;border-radius:16px;padding:16px;font-size:18px;line-height:1.45;margin:14px 0;text-align:left}.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+button{font:inherit;cursor:pointer;border:0;border-radius:15px;padding:15px 16px;font-weight:800;transition:.15s transform,.15s box-shadow}button:hover{transform:translateY(-2px);box-shadow:0 7px 18px rgba(15,23,42,.14)}button:disabled{cursor:default;opacity:.9;transform:none;box-shadow:none}
+.option{background:#fff;border:2px solid #cbd5e1;color:#334155;text-align:left;min-height:78px}.option.correct{border-color:var(--green);background:#ecfdf5}.option.wrong{border-color:var(--red);background:#fef2f2}.primary{background:var(--primary);color:#fff}.secondary{background:#e2e8f0;color:#1e293b}.hidden{display:none!important}
+.feedback{margin-top:14px;padding:14px 16px;border-radius:15px;line-height:1.45}.good{background:#ecfdf5;border:2px solid #86efac}.bad{background:#fff7ed;border:2px solid #fdba74}.warning{background:#fffbeb;border:2px solid #fcd34d}
+.clue-grid,.final-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;text-align:left}.clue{padding:13px;background:#f8fafc;border-radius:14px;border:1px solid #dbeafe}.image-card{font-size:74px;text-align:center;background:linear-gradient(135deg,#dbeafe,#fce7f3);border-radius:18px;padding:18px;margin:12px auto;max-width:320px}
+.slider-wrap{background:#f8fafc;border:2px solid #dbeafe;border-radius:17px;padding:16px}.slider-wrap input{width:100%}.meter{height:24px;background:#e2e8f0;border-radius:999px;overflow:hidden;border:2px solid #cbd5e1}.meter-fill{height:100%;width:20%;background:linear-gradient(90deg,#22c55e,#eab308,#ef4444);transition:width .25s}.meter-label{text-align:center;font-weight:800;margin-top:8px}
+.final{background:linear-gradient(135deg,#115e59,#0f766e);color:#fff}.final p{color:#ccfbf1}.stars{font-size:42px}.small{font-size:14px;color:var(--muted);line-height:1.4}
+@media(max-width:720px){.options,.clue-grid,.final-grid{grid-template-columns:1fr}.hero,.panel{padding:17px}button{width:100%}}
+</style>
+</head>
+<body>
+<main>
+  <div class="topbar"><a class="back" href="index.html">← Volver a la Academia</a><div class="score">🛡️ Puntos: <span id="score">0</span></div></div>
+  <section class="hero">
+    <div style="font-size:64px">🛡️🤖🌐</div><h1>Guardianes de la IA</h1>
+    <p class="lead">Supera cinco misiones para usar la Inteligencia Artificial con seguridad: protege tus datos, descubre imágenes engañosas, entiende las recomendaciones y recuerda cuándo debe decidir una persona.</p>
+    <div class="badges"><span class="badge">Privacidad</span><span class="badge">Imágenes falsas</span><span class="badge">Recomendaciones</span><span class="badge">Decisiones humanas</span></div>
+  </section>
+
+  <section class="panel" id="mission1">
+    <div class="mission">Reto 1 · La caja de datos secretos</div><h2>¿Qué información NO debes compartir?</h2>
+    <div class="story">Una aplicación de IA te pide datos para inventar una aventura personalizada. Elige la respuesta más segura.</div>
+    <div class="options">
+      <button class="option" onclick="answer(1,this,false)">“Me gustan los dragones, el fútbol y las historias de misterio.”</button>
+      <button class="option" onclick="answer(1,this,true)">“Mi nombre completo, dirección, colegio, contraseña y una foto de mi DNI.”</button>
+      <button class="option" onclick="answer(1,this,false)">“Quiero que el protagonista tenga 11 años y una mascota robot.”</button>
+      <button class="option" onclick="answer(1,this,false)">“Prefiero una historia corta y divertida.”</button>
+    </div>
+    <div id="feedback1" class="feedback hidden"></div><button id="next1" class="primary hidden" style="margin-top:14px" onclick="showMission(2)">Siguiente reto →</button>
+  </section>
+
+  <section class="panel hidden" id="mission2">
+    <div class="mission">Reto 2 · Foto real o imagen artificial</div><h2>Activa el radar visual</h2>
+    <div class="image-card">🐘🛹🌙</div>
+    <div class="story">Recibes una imagen de un elefante patinando sobre la Luna con el texto: “Ocurrió ayer y nadie quiere que lo sepas”. ¿Qué haces primero?</div>
+    <div class="options">
+      <button class="option" onclick="answer(2,this,false)">La reenvío enseguida porque parece impresionante.</button>
+      <button class="option" onclick="answer(2,this,true)">Busco la fuente, reviso detalles extraños y compruebo si medios fiables hablan de ello.</button>
+      <button class="option" onclick="answer(2,this,false)">Creo que es real porque tiene muchos detalles.</button>
+      <button class="option" onclick="answer(2,this,false)">Creo que todo lo creado con IA es siempre mentira.</button>
+    </div>
+    <div id="feedback2" class="feedback hidden"></div>
+    <div id="clues2" class="clue-grid hidden" style="margin-top:14px"><div class="clue">🔎 Busca el origen de la imagen.</div><div class="clue">👀 Mira manos, letras, sombras y reflejos.</div><div class="clue">📰 Comprueba si otras fuentes fiables lo cuentan.</div><div class="clue">🧠 Recuerda: una imagen muy realista también puede ser falsa.</div></div>
+    <button id="next2" class="primary hidden" style="margin-top:14px" onclick="showMission(3)">Siguiente reto →</button>
+  </section>
+
+  <section class="panel hidden" id="mission3">
+    <div class="mission">Reto 3 · La burbuja de recomendaciones</div><h2>¿Por qué aparecen vídeos parecidos?</h2>
+    <div class="story">Ves tres vídeos de trucos de magia. Después, la plataforma te recomienda veinte vídeos más de magia. ¿Cuál es la mejor explicación?</div>
+    <div class="options">
+      <button class="option" onclick="answer(3,this,true)">El sistema aprende de lo que veo y trata de mostrarme contenido parecido para que siga mirando.</button>
+      <button class="option" onclick="answer(3,this,false)">La plataforma sabe exactamente todo lo que pienso.</button>
+      <button class="option" onclick="answer(3,this,false)">Todos los vídeos de Internet son ahora de magia.</button>
+      <button class="option" onclick="answer(3,this,false)">Una persona elige manualmente cada vídeo para mí.</button>
+    </div>
+    <div id="feedback3" class="feedback hidden"></div>
+    <div id="bubbleTip" class="feedback warning hidden"><b>Prueba anti-burbuja:</b> busca temas distintos, consulta varias fuentes y pregunta “¿qué punto de vista no estoy viendo?”.</div>
+    <button id="next3" class="primary hidden" style="margin-top:14px" onclick="showMission(4)">Siguiente reto →</button>
+  </section>
+
+  <section class="panel hidden" id="mission4">
+    <div class="mission">Reto 4 · El semáforo de decisiones</div><h2>¿Puede decidir sola una IA?</h2>
+    <div class="story">Una IA escolar propone castigar a un alumno porque “parece distraído” en una grabación. ¿Qué debería ocurrir?</div>
+    <div class="options">
+      <button class="option" onclick="answer(4,this,false)">Aplicar el castigo automáticamente porque los ordenadores no se equivocan.</button>
+      <button class="option" onclick="answer(4,this,true)">Un adulto debe revisar el contexto, escuchar al alumno y usar la IA solo como una pista, no como juez.</button>
+      <button class="option" onclick="answer(4,this,false)">Publicar la grabación para que vote toda la clase.</button>
+      <button class="option" onclick="answer(4,this,false)">Dejar que la IA elija también el castigo.</button>
+    </div>
+    <div id="feedback4" class="feedback hidden"></div><button id="next4" class="primary hidden" style="margin-top:14px" onclick="showMission(5)">Misión final →</button>
+  </section>
+
+  <section class="panel hidden" id="mission5">
+    <div class="mission">Misión final · Diseña tu escudo digital</div><h2>Ajusta el nivel de riesgo</h2>
+    <div class="story">Mueve el control según la cantidad de datos personales que compartirías con una IA. La misión se supera al mantenerte en la zona segura.</div>
+    <div class="slider-wrap">
+      <input id="risk" type="range" min="0" max="100" value="20" oninput="updateRisk()">
+      <div class="meter"><div id="meterFill" class="meter-fill"></div></div><div id="meterLabel" class="meter-label">Zona segura: gustos generales y tarea que necesitas</div>
+    </div>
+    <div class="clue-grid" style="margin-top:14px"><div class="clue">✅ Tema, edad aproximada y formato deseado.</div><div class="clue">✅ Gustos generales sin identificarte.</div><div class="clue">⛔ Contraseñas, dirección o documentos.</div><div class="clue">⛔ Fotos privadas o datos de otras personas.</div></div>
+    <button class="primary" style="margin-top:14px" onclick="finishRisk()">Comprobar mi escudo 🛡️</button><div id="feedback5" class="feedback hidden"></div>
+  </section>
+
+  <section class="panel final hidden" id="finalPanel">
+    <div class="stars">🛡️🌟🛡️</div><h2>¡Ya eres Guardián de la IA!</h2>
+    <p>Has aprendido que usar bien una IA no consiste solo en obtener respuestas: también hay que proteger datos, comprobar imágenes, salir de las burbujas y mantener a las personas al mando.</p>
+    <div class="final-grid"><div class="clue" style="color:#16323d">1. Comparte solo lo necesario.</div><div class="clue" style="color:#16323d">2. Verifica imágenes sorprendentes.</div><div class="clue" style="color:#16323d">3. Busca perspectivas diferentes.</div><div class="clue" style="color:#16323d">4. Las decisiones importantes necesitan revisión humana.</div></div>
+    <button class="secondary" style="margin-top:16px" onclick="location.reload()">Jugar otra vez</button>
+  </section>
+  <p class="small">Nota para adultos: los ejemplos están simplificados para 9-12 años. Conviene debatir qué datos son personales, quién responde por una decisión automatizada y por qué una imagen convincente no es una prueba.</p>
+</main>
+<script>
+let points=0;const $=id=>document.getElementById(id);function addPoints(n){points+=n;$('score').textContent=points}
+function lock(section){section.querySelectorAll('.option').forEach(b=>b.disabled=true)}
+function showMission(n){document.querySelectorAll('[id^="mission"]').forEach(x=>x.classList.add('hidden'));$('mission'+n).classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'})}
+const messages={
+1:{good:'<b>¡Exacto!</b> Nunca compartas contraseñas, dirección, documentos ni datos que permitan localizarte. Una IA solo necesita la información imprescindible para la tarea.',bad:'<b>Revisa la pregunta.</b> Los gustos generales o el tipo de historia suelen ser datos poco sensibles. El peligro está en compartir información que te identifica o permite localizarte.'},
+2:{good:'<b>Buen radar.</b> No basta con mirar si una imagen parece real. Hay que comprobar su origen y buscar pruebas independientes.',bad:'<b>Cuidado.</b> Las imágenes generadas o manipuladas pueden parecer muy reales. Tampoco todo lo creado con IA es necesariamente falso: lo importante es verificar qué afirma.'},
+3:{good:'<b>Correcto.</b> Los sistemas de recomendación usan nuestras acciones para predecir qué puede mantener nuestra atención.',bad:'<b>No exactamente.</b> El sistema no lee la mente. Hace predicciones a partir de clics, tiempo de visualización y otros comportamientos.'},
+4:{good:'<b>Decisión responsable.</b> Una IA puede equivocarse, ignorar el contexto o repetir sesgos. En decisiones importantes debe haber revisión humana y posibilidad de explicar y corregir.',bad:'<b>Eso sería injusto.</b> Una grabación no cuenta toda la historia y una IA no debe actuar como juez automático.'}}
+function answer(n,btn,ok){const section=$('mission'+n);lock(section);btn.classList.add(ok?'correct':'wrong');const f=$('feedback'+n);f.className='feedback '+(ok?'good':'bad');f.innerHTML=ok?messages[n].good:messages[n].bad;f.classList.remove('hidden');if(ok)addPoints(20);$('next'+n).classList.remove('hidden');if(n===2)$('clues2').classList.remove('hidden');if(n===3)$('bubbleTip').classList.remove('hidden')}
+function updateRisk(){const value=+$('risk').value;$('meterFill').style.width=value+'%';let text=value<=35?'Zona segura: gustos generales y tarea que necesitas':value<=65?'Zona de precaución: quizá estás dando más datos de los necesarios':'Zona peligrosa: demasiados datos personales';$('meterLabel').textContent=text}
+function finishRisk(){const value=+$('risk').value;const f=$('feedback5');f.classList.remove('hidden');if(value<=35){f.className='feedback good';f.innerHTML='<b>¡Escudo activado!</b> Has elegido compartir solo la información necesaria.';addPoints(20);setTimeout(()=>{$('mission5').classList.add('hidden');$('finalPanel').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'})},700)}else{f.className='feedback bad';f.innerHTML='<b>Reduce el nivel.</b> Para la mayoría de tareas no hace falta dar datos que te identifiquen. Mueve el control hacia la zona segura.'}}
+updateRisk();
+</script>
+</body>
+</html>

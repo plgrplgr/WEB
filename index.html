@@ -5,132 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Juegos para aprender Inteligencia Artificial</title>
   <style>
-    :root{
-      --fondo:#eef2ff;
-      --tarjeta:#ffffff;
-      --texto:#1e293b;
-      --secundario:#64748b;
-      --primario:#4f46e5;
-      --primario-oscuro:#3730a3;
-      --borde:#c7d2fe;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      min-height:100vh;
-      font-family:Arial, Helvetica, sans-serif;
-      background:var(--fondo);
-      color:var(--texto);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:24px;
-    }
-    main{
-      width:100%;
-      max-width:900px;
-    }
-    header{
-      text-align:center;
-      margin-bottom:28px;
-    }
-    h1{
-      margin:0 0 10px;
-      font-size:clamp(28px,5vw,44px);
-    }
-    header p{
-      margin:0;
-      color:var(--secundario);
-      font-size:18px;
-    }
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:20px;
-    }
-    .card{
-      background:var(--tarjeta);
-      border:2px solid var(--borde);
-      border-radius:22px;
-      padding:24px;
-      text-align:center;
-      box-shadow:0 12px 28px rgba(79,70,229,.12);
-    }
-    .icono{
-      font-size:64px;
-      margin-bottom:10px;
-    }
-    h2{
-      margin:0 0 10px;
-      font-size:25px;
-    }
-    .card p{
-      color:var(--secundario);
-      min-height:72px;
-      line-height:1.5;
-    }
-    a{
-      display:inline-block;
-      margin-top:10px;
-      padding:14px 22px;
-      border-radius:999px;
-      background:var(--primario);
-      color:#fff;
-      text-decoration:none;
-      font-weight:700;
-      font-size:18px;
-    }
-    a:hover,a:focus{
-      background:var(--primario-oscuro);
-    }
-    footer{
-      margin-top:24px;
-      text-align:center;
-      color:var(--secundario);
-      font-size:14px;
-    }
-    @media(max-width:900px){
-      .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-    }
-    @media(max-width:700px){
-      .grid{grid-template-columns:1fr}
-      .card p{min-height:auto}
-    }
+    :root{--fondo:#eef2ff;--tarjeta:#ffffff;--texto:#1e293b;--secundario:#64748b;--primario:#4f46e5;--primario-oscuro:#3730a3;--borde:#c7d2fe}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Arial,Helvetica,sans-serif;background:var(--fondo);color:var(--texto);padding:28px 20px}main{width:100%;max-width:1050px;margin:auto}header{text-align:center;margin-bottom:28px}h1{margin:0 0 10px;font-size:clamp(30px,5vw,46px)}header p{margin:0;color:var(--secundario);font-size:18px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.card{background:var(--tarjeta);border:2px solid var(--borde);border-radius:22px;padding:24px;text-align:center;box-shadow:0 12px 28px rgba(79,70,229,.12);display:flex;flex-direction:column}.icono{font-size:64px;margin-bottom:10px}h2{margin:0 0 10px;font-size:25px}.card p{color:var(--secundario);line-height:1.5;flex-grow:1}.card a{display:inline-block;margin-top:10px;padding:14px 22px;border-radius:999px;background:var(--primario);color:#fff;text-decoration:none;font-weight:700;font-size:18px}.card a:hover,.card a:focus{background:var(--primario-oscuro)}footer{margin-top:24px;text-align:center;color:var(--secundario);font-size:14px}@media(max-width:700px){.grid{grid-template-columns:1fr}}
   </style>
 </head>
-<body>
-  <main>
-    <header>
-      <h1>Academia de Inteligencia Artificial</h1>
-      <p>Elige uno de los juegos para descubrir cómo aprende una IA.</p>
-    </header>
-
-    <section class="grid" aria-label="Selección de juegos">
-      <article class="card">
-        <div class="icono" aria-hidden="true">🐶🐱</div>
-        <h2>Entrena el cerebro de Byte</h2>
-        <p>Enseña a Byte a distinguir perros y gatos mediante ejemplos correctamente clasificados.</p>
-        <a href="entrena_el_cerebro_de_byte.html">Abrir juego de Byte</a>
-      </article>
-
-      <article class="card">
-        <div class="icono" aria-hidden="true">🤖🧠</div>
-        <h2>Entrena a Chip</h2>
-        <p>Clasifica frutas y juguetes, prueba las predicciones de Chip y corrige sus errores.</p>
-        <a href="entrena_a_chip_juego_de_ia.html">Abrir juego de Chip</a>
-      </article>
-
-      <article class="card">
-        <div class="icono" aria-hidden="true">🕵️‍♀️🤖</div>
-        <h2>Detectives de prompts</h2>
-        <p>Aprende a crear buenas preguntas y a descubrir respuestas inventadas, sesgadas o poco fiables.</p>
-        <a href="detectives_de_prompts.html">Abrir misión de detectives</a>
-      </article>
-    </section>
-
-    <footer>
-      Elige un juego y aprende cómo funciona la Inteligencia Artificial.
-    </footer>
-  </main>
-</body>
-</html>
+<body><main>
+<header><h1>Academia de Inteligencia Artificial</h1><p>Elige una misión y aprende jugando cómo funciona y cómo usar bien la IA.</p></header>
+<section class="grid" aria-label="Selección de juegos">
+  <article class="card"><div class="icono" aria-hidden="true">🐶🐱</div><h2>Entrena el cerebro de Byte</h2><p>Enseña a Byte a distinguir perros y gatos mediante ejemplos correctamente clasificados.</p><a href="entrena_el_cerebro_de_byte.html">Abrir juego de Byte</a></article>
+  <article class="card"><div class="icono" aria-hidden="true">🤖🧠</div><h2>Entrena a Chip</h2><p>Clasifica frutas y juguetes, prueba las predicciones de Chip y corrige sus errores.</p><a href="entrena_a_chip_juego_de_ia.html">Abrir juego de Chip</a></article>
+  <article class="card"><div class="icono" aria-hidden="true">🕵️‍♀️💬</div><h2>Detectives de prompts</h2><p>Aprende a escribir mejores peticiones y a detectar respuestas inventadas, sesgadas o poco fiables.</p><a href="detectives_de_prompts.html">Abrir Detectives de prompts</a></article>
+  <article class="card"><div class="icono" aria-hidden="true">🛡️🌐</div><h2>Guardianes de la IA</h2><p>Protege tus datos, descubre imágenes engañosas, entiende las recomendaciones y mantén a las personas al mando.</p><a href="guardianes_de_la_ia.html">Abrir Guardianes de la IA</a></article>
+</section>
+<footer>Cuatro juegos para aprender Inteligencia Artificial de forma práctica y segura.</footer>
+</main></body></html>
