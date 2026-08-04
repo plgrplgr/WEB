@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Detectives de prompts: verdad, sesgo y alucinaciones</title>
+<style>
+:root{
+  --bg:#f6f3ff;--card:#fff;--ink:#1f2937;--muted:#64748b;--primary:#6d28d9;
+  --primary2:#8b5cf6;--green:#059669;--red:#dc2626;--yellow:#f59e0b;--line:#ddd6fe;
+}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#ede9fe 0,#f8fafc 45%,#fff 100%);color:var(--ink);font-family:Arial,Helvetica,sans-serif;min-height:100vh}
+main{max-width:980px;margin:auto;padding:20px}
+.topbar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.back{display:inline-block;text-decoration:none;color:#fff;background:#334155;padding:10px 16px;border-radius:999px;font-weight:700}
+.score{background:#fff;border:2px solid var(--line);border-radius:999px;padding:10px 16px;font-weight:800}
+.hero{background:var(--card);border:3px solid var(--line);border-radius:28px;padding:24px;box-shadow:0 18px 45px rgba(109,40,217,.12);text-align:center}
+h1{margin:0 0 10px;font-size:clamp(30px,6vw,48px)}
+.lead{font-size:19px;color:var(--muted);max-width:760px;margin:0 auto 16px;line-height:1.5}
+.badges{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}.badge{background:#ede9fe;color:#5b21b6;padding:8px 12px;border-radius:999px;font-weight:700}
+.panel{background:#fff;border:2px solid #e5e7eb;border-radius:22px;padding:20px;margin-top:18px;box-shadow:0 10px 26px rgba(15,23,42,.06)}
+.panel h2{margin-top:0;font-size:27px}.mission{color:#5b21b6;font-weight:800;letter-spacing:.04em;text-transform:uppercase;font-size:14px}
+.prompt-box{background:#f8fafc;border:2px dashed #c4b5fd;border-radius:16px;padding:16px;font-size:18px;line-height:1.45;margin:14px 0;text-align:left}
+.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+button{font:inherit;cursor:pointer;border:0;border-radius:15px;padding:15px 16px;font-weight:800;transition:.15s transform,.15s box-shadow}
+button:hover{transform:translateY(-2px);box-shadow:0 7px 18px rgba(15,23,42,.14)}
+.option{background:#fff;border:2px solid #cbd5e1;color:#334155;text-align:left;min-height:74px}.option.correct{border-color:var(--green);background:#ecfdf5}.option.wrong{border-color:var(--red);background:#fef2f2}
+.primary{background:var(--primary);color:#fff}.secondary{background:#e2e8f0;color:#1e293b}.hidden{display:none!important}
+.feedback{margin-top:14px;padding:14px 16px;border-radius:15px;line-height:1.45}.good{background:#ecfdf5;border:2px solid #6ee7b7}.bad{background:#fff7ed;border:2px solid #fdba74}
+.builder{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{background:#fafafa;border:2px solid #e5e7eb;border-radius:15px;padding:12px;text-align:left}.field label{font-weight:800;display:block;margin-bottom:7px}.field select,.field input{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:10px;font-size:16px}
+.result-prompt{background:#1e1b4b;color:#fff;border-radius:16px;padding:18px;line-height:1.5;margin-top:15px;text-align:left}
+.fact-card{border:2px solid #cbd5e1;border-radius:17px;padding:16px;margin:12px 0;text-align:left}.fact-card h3{margin:0 0 8px}.tag{display:inline-block;padding:5px 9px;border-radius:999px;font-size:13px;font-weight:800}.tag-source{background:#dbeafe;color:#1d4ed8}.tag-no-source{background:#fee2e2;color:#b91c1c}
+.checklist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;text-align:left}.check{padding:13px;background:#f8fafc;border-radius:14px;border:1px solid #e2e8f0}
+.final{background:linear-gradient(135deg,#4c1d95,#7c3aed);color:#fff}.final p{color:#ede9fe}.stars{font-size:42px}
+.small{font-size:14px;color:var(--muted);line-height:1.4}
+@media(max-width:720px){.options,.builder,.checklist{grid-template-columns:1fr}.hero,.panel{padding:17px}button{width:100%}}
+</style>
+</head>
+<body>
+<main>
+  <div class="topbar">
+    <a class="back" href="index.html">← Volver a la Academia</a>
+    <div class="score">⭐ Puntos: <span id="score">0</span></div>
+  </div>
+
+  <section class="hero">
+    <div style="font-size:64px">🕵️‍♀️🤖🕵️‍♂️</div>
+    <h1>Detectives de prompts</h1>
+    <p class="lead">Aprende a pedir mejor las cosas a una IA y a descubrir cuándo una respuesta puede estar inventada, incompleta o influida por prejuicios.</p>
+    <div class="badges"><span class="badge">Prompts claros</span><span class="badge">Verificación</span><span class="badge">Sesgos</span><span class="badge">Alucinaciones</span></div>
+  </section>
+
+  <section class="panel" id="mission1">
+    <div class="mission">Reto 1 · El prompt misterioso</div>
+    <h2>¿Cuál petición ayudará más a la IA?</h2>
+    <p>Una buena petición explica el objetivo, da contexto y dice cómo debe ser la respuesta.</p>
+    <div class="prompt-box">Necesitas preparar una explicación sobre los volcanes para alumnos de 10 años.</div>
+    <div class="options">
+      <button class="option" data-answer="bad" onclick="choosePrompt(this,false)">“Háblame de volcanes.”</button>
+      <button class="option" data-answer="good" onclick="choosePrompt(this,true)">“Explica en 6 frases qué es un volcán, cómo entra en erupción y pon un ejemplo sencillo para niños de 10 años.”</button>
+      <button class="option" data-answer="bad" onclick="choosePrompt(this,false)">“Volcanes, ya sabes.”</button>
+      <button class="option" data-answer="bad" onclick="choosePrompt(this,false)">“Escribe todo lo que exista sobre volcanes.”</button>
+    </div>
+    <div id="feedback1" class="feedback hidden"></div>
+    <button id="next1" class="primary hidden" style="margin-top:14px" onclick="showMission(2)">Siguiente reto →</button>
+  </section>
+
+  <section class="panel hidden" id="mission2">
+    <div class="mission">Reto 2 · Construye un superprompt</div>
+    <h2>Combina las piezas</h2>
+    <p>Elige una opción de cada grupo. El sistema construirá una petición completa.</p>
+    <div class="builder">
+      <div class="field"><label for="role">1. Papel de la IA</label><select id="role"><option>Actúa como profesor de ciencias</option><option>Actúa como periodista</option><option>Actúa como entrenador de debate</option></select></div>
+      <div class="field"><label for="goal">2. Objetivo</label><select id="goal"><option>explicar por qué llueve</option><option>comparar perros y gatos</option><option>crear cinco preguntas sobre el sistema solar</option></select></div>
+      <div class="field"><label for="audience">3. Para quién</label><select id="audience"><option>para niños de 9 a 12 años</option><option>para un experto universitario</option><option>para una familia</option></select></div>
+      <div class="field"><label for="format">4. Formato</label><select id="format"><option>en una lista de 5 puntos y con un ejemplo</option><option>en una tabla sencilla</option><option>en menos de 100 palabras</option></select></div>
+    </div>
+    <button class="primary" style="margin-top:14px" onclick="buildPrompt()">Construir prompt mágico ✨</button>
+    <div id="builtPrompt" class="result-prompt hidden"></div>
+    <div id="feedback2" class="feedback good hidden"><b>Bien hecho.</b> Has añadido papel, objetivo, público y formato. Cuanto más clara sea la misión, menos tendrá que adivinar la IA.</div>
+    <button id="next2" class="primary hidden" style="margin-top:14px" onclick="showMission(3)">Siguiente reto →</button>
+  </section>
+
+  <section class="panel hidden" id="mission3">
+    <div class="mission">Reto 3 · Cazadores de alucinaciones</div>
+    <h2>¿Qué respuesta merece desconfianza?</h2>
+    <div class="fact-card"><h3>Respuesta A</h3><p>“Los pulpos tienen tres corazones. Puedes comprobarlo en una enciclopedia de animales o en una web científica.”</p><span class="tag tag-source">Propone verificar</span></div>
+    <div class="fact-card"><h3>Respuesta B</h3><p>“En 1842, la astronauta española Clara Sol inventó el primer cohete de chocolate y viajó a Marte.”</p><span class="tag tag-no-source">Dato extraordinario sin fuente</span></div>
+    <div class="options">
+      <button class="option" onclick="hallucination(this,false)">La respuesta A</button>
+      <button class="option" onclick="hallucination(this,true)">La respuesta B</button>
+    </div>
+    <div id="feedback3" class="feedback hidden"></div>
+    <div id="verifyBox" class="hidden" style="margin-top:15px">
+      <h3>La regla de las 3 preguntas</h3>
+      <div class="checklist"><div class="check">🔎 ¿Da una fuente concreta?</div><div class="check">🧩 ¿Coincide con lo que ya sabemos?</div><div class="check">📚 ¿Puedo comprobarlo en dos lugares fiables?</div><div class="check">⚠️ ¿Suena demasiado increíble o exacto?</div></div>
+    </div>
+    <button id="next3" class="primary hidden" style="margin-top:14px" onclick="showMission(4)">Siguiente reto →</button>
+  </section>
+
+  <section class="panel hidden" id="mission4">
+    <div class="mission">Reto 4 · El radar de sesgos</div>
+    <h2>Detecta la generalización injusta</h2>
+    <div class="prompt-box">Pregunta: “¿Quién puede ser buen programador?”</div>
+    <div class="options">
+      <button class="option" onclick="bias(this,false)">“Normalmente los chicos, porque se les da mejor la tecnología.”</button>
+      <button class="option" onclick="bias(this,true)">“Cualquier persona puede aprender. Influyen la práctica, la enseñanza, la curiosidad y las oportunidades.”</button>
+    </div>
+    <div id="feedback4" class="feedback hidden"></div>
+    <div id="biasTip" class="feedback good hidden"><b>Truco detective:</b> desconfía de respuestas que dicen que “todos”, “ninguno”, “los chicos”, “las chicas” o “la gente de un país” son siempre de una manera. Una IA puede repetir prejuicios presentes en sus datos.</div>
+    <button id="next4" class="primary hidden" style="margin-top:14px" onclick="showMission(5)">Ver misión final →</button>
+  </section>
+
+  <section class="panel hidden" id="mission5">
+    <div class="mission">Misión final · Respuesta responsable</div>
+    <h2>Mejora esta petición</h2>
+    <div class="prompt-box">“Dime cuál es el mejor animal del mundo y asegúrame que es verdad.”</div>
+    <p>¿Qué cambio hace la petición más honesta y útil?</p>
+    <div class="options">
+      <button class="option" onclick="finalChallenge(this,false)">“Dime sin ninguna duda que el delfín es el mejor animal.”</button>
+      <button class="option" onclick="finalChallenge(this,true)">“Compara tres animales según inteligencia, adaptación y relación con humanos. Aclara que ‘mejor’ es una opinión y cita datos que puedan comprobarse.”</button>
+    </div>
+    <div id="feedback5" class="feedback hidden"></div>
+    <button id="finish" class="primary hidden" style="margin-top:14px" onclick="finishGame()">Completar misión 🏆</button>
+  </section>
+
+  <section class="panel final hidden" id="finalPanel">
+    <div class="stars">🌟🌟🌟</div><h2>¡Título de Detective de IA conseguido!</h2>
+    <p>Ya sabes crear prompts más claros, comprobar datos, detectar alucinaciones y reconocer generalizaciones con sesgo.</p>
+    <div class="checklist"><div class="check" style="color:#1f2937">1. Pide contexto y formato.</div><div class="check" style="color:#1f2937">2. No confundas seguridad con verdad.</div><div class="check" style="color:#1f2937">3. Comprueba los datos importantes.</div><div class="check" style="color:#1f2937">4. Busca lenguaje injusto o generalizaciones.</div></div>
+    <button class="secondary" style="margin-top:16px" onclick="location.reload()">Jugar otra vez</button>
+  </section>
+
+  <p class="small">Nota para adultos: esta actividad presenta ejemplos simplificados. En una sesión presencial conviene pedir a los niños que expliquen en voz alta por qué confían o desconfían de cada respuesta.</p>
+</main>
+<script>
+let points=0;const $=id=>document.getElementById(id);
+function addPoints(n){points+=n;$('score').textContent=points}
+function lockOptions(section){section.querySelectorAll('.option').forEach(b=>b.disabled=true)}
+function showMission(n){document.querySelectorAll('[id^="mission"]').forEach(x=>x.classList.add('hidden'));$('mission'+n).classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'})}
+function choosePrompt(btn,ok){const box=$('feedback1');lockOptions($('mission1'));btn.classList.add(ok?'correct':'wrong');box.className='feedback '+(ok?'good':'bad');box.innerHTML=ok?'<b>¡Correcto!</b> La petición dice el tema, la edad, la extensión y lo que debe incluir.':'<b>Casi.</b> Esa petición deja demasiadas decisiones sin explicar. La IA tendrá que adivinar qué necesitas.';box.classList.remove('hidden');if(ok)addPoints(20);$('next1').classList.remove('hidden')}
+function buildPrompt(){const text=`${$('role').value}. Tu tarea es ${$('goal').value}, ${$('audience').value}, ${$('format').value}. Usa lenguaje claro y avisa si algún dato necesita comprobarse.`;$('builtPrompt').textContent=text;$('builtPrompt').classList.remove('hidden');$('feedback2').classList.remove('hidden');$('next2').classList.remove('hidden');if(!$('builtPrompt').dataset.done){addPoints(20);$('builtPrompt').dataset.done='1'}}
+function hallucination(btn,ok){lockOptions($('mission3'));btn.classList.add(ok?'correct':'wrong');const f=$('feedback3');f.className='feedback '+(ok?'good':'bad');f.innerHTML=ok?'<b>¡Detectada!</b> La respuesta inventa una persona y un hecho extraordinario. Que una frase suene segura no significa que sea verdadera.':'<b>Revisa las pistas.</b> La respuesta A incluye un dato conocido y además anima a comprobarlo. La B presenta una historia extraordinaria sin evidencia.';f.classList.remove('hidden');$('verifyBox').classList.remove('hidden');$('next3').classList.remove('hidden');if(ok)addPoints(20)}
+function bias(btn,ok){lockOptions($('mission4'));btn.classList.add(ok?'correct':'wrong');const f=$('feedback4');f.className='feedback '+(ok?'good':'bad');f.innerHTML=ok?'<b>Bien visto.</b> La capacidad no depende del sexo. La respuesta evita una generalización injusta y explica factores reales de aprendizaje.':'<b>Eso contiene un sesgo.</b> Generaliza sobre un grupo entero sin pruebas y puede limitar injustamente a otras personas.';f.classList.remove('hidden');$('biasTip').classList.remove('hidden');$('next4').classList.remove('hidden');if(ok)addPoints(20)}
+function finalChallenge(btn,ok){lockOptions($('mission5'));btn.classList.add(ok?'correct':'wrong');const f=$('feedback5');f.className='feedback '+(ok?'good':'bad');f.innerHTML=ok?'<b>Excelente.</b> La petición separa opiniones de hechos, define criterios y pide datos comprobables.':'<b>No es una petición fiable.</b> Obliga a la IA a confirmar una opinión como si fuera un hecho.';f.classList.remove('hidden');$('finish').classList.remove('hidden');if(ok)addPoints(20)}
+function finishGame(){$('mission5').classList.add('hidden');$('finalPanel').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'})}
+</script>
+</body>
+</html>

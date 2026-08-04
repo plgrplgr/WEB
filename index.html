@@ -45,7 +45,7 @@
     }
     .grid{
       display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
+      grid-template-columns:repeat(3,minmax(0,1fr));
       gap:20px;
     }
     .card{
@@ -89,6 +89,9 @@
       color:var(--secundario);
       font-size:14px;
     }
+    @media(max-width:900px){
+      .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
     @media(max-width:700px){
       .grid{grid-template-columns:1fr}
       .card p{min-height:auto}
@@ -115,6 +118,13 @@
         <h2>Entrena a Chip</h2>
         <p>Clasifica frutas y juguetes, prueba las predicciones de Chip y corrige sus errores.</p>
         <a href="entrena_a_chip_juego_de_ia.html">Abrir juego de Chip</a>
+      </article>
+
+      <article class="card">
+        <div class="icono" aria-hidden="true">🕵️‍♀️🤖</div>
+        <h2>Detectives de prompts</h2>
+        <p>Aprende a crear buenas preguntas y a descubrir respuestas inventadas, sesgadas o poco fiables.</p>
+        <a href="detectives_de_prompts.html">Abrir misión de detectives</a>
       </article>
     </section>
 
