@@ -28,3 +28,9 @@ El contenido está preparado para GitHub Pages y no necesita compilación.
 - Mensajes de respuesta anunciados mediante `aria-live`.
 - Estados correctos e incorrectos indicados con texto, no solo con color.
 - Compatibilidad con `prefers-reduced-motion`.
+
+
+## Versión 6
+- Módulo 5 ampliado a 12 retos.
+- Nuevo módulo 6 con 8 retos sobre control del tiempo digital.
+- Mejoras de visibilidad de botones, tipografía para proyector y navegación sin scroll.
