@@ -1,10 +1,30 @@
 # Academia Digital PLGRPLGR
 
-Aplicación web estática preparada para GitHub Pages.
+Aplicación web estática para niños y niñas de 9 a 12 años.
 
-## Estructura
+## Módulos
 
-- `index.html`: selector principal de módulos.
-- `modulo_3_ia.html`: acceso a los cuatro ejercicios de Inteligencia Artificial.
-- `modulo_4_fake_news.html`: nuevo módulo interactivo de Fake News con tres misiones.
-- Resto de archivos HTML: ejercicios existentes del módulo 3.
+- Módulo 3: Inteligencia Artificial.
+- Módulo 4: Detectives de noticias falsas.
+- Módulo 5: Bienestar digital, seguridad y relaciones sanas en internet.
+
+## Uso local
+
+Abre `index.html` en un navegador o usa un servidor estático:
+
+```bash
+python3 -m http.server 8000
+```
+
+Después visita `http://localhost:8000`.
+
+## Publicación
+
+El contenido está preparado para GitHub Pages y no necesita compilación.
+
+## Accesibilidad
+
+- Navegación completa con teclado.
+- Mensajes de respuesta anunciados mediante `aria-live`.
+- Estados correctos e incorrectos indicados con texto, no solo con color.
+- Compatibilidad con `prefers-reduced-motion`.
