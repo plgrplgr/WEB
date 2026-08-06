@@ -133,7 +133,24 @@ function chooseSource(el,good){if(sLocked)return;sLocked=true;document.querySele
 function nextM2(){if(sIndex<sourcePairs.length-1){sIndex++;renderSources()}else{mission=3;update();goStep(1);show('a3')}}
 function goStep(n){document.querySelectorAll('#a3 .step').forEach(x=>x.classList.remove('active'));$('step'+n).classList.add('active')}
 let selectedGood=0,selectedTotal=0,decisionCount=0;
-function selectCompare(btn,good){if(btn.disabled)return;btn.disabled=true;selectedTotal++;if(good){btn.classList.add('correct');selectedGood++;score+=10}else btn.classList.add('wrong');if(selectedTotal===4){setFeedback('compareFeedback',selectedGood===2,selectedGood===2?'✅ Has identificado las dos comprobaciones útiles.':'🔎 Las fuentes útiles son las que pueden confirmar el hecho con responsabilidad y pruebas.');$('decisionBtn').style.display='inline-flex';update()}}
+function selectCompare(btn,good){
+  if(btn.disabled||selectedTotal>=2)return;
+  btn.disabled=true;
+  selectedTotal++;
+  if(good){btn.classList.add('correct');selectedGood++;score+=10}
+  else{btn.classList.add('wrong')}
+
+  if(selectedTotal===2){
+    document.querySelectorAll('#compareChoices .choice').forEach(b=>b.disabled=true);
+    const ok=selectedGood===2;
+    setFeedback('compareFeedback',ok,ok
+      ?'✅ Has elegido las dos comprobaciones útiles. Ya puedes continuar.'
+      :'🔎 Has elegido dos opciones, pero no son las dos más útiles. Las comprobaciones correctas son la web oficial del ayuntamiento y la confirmación del centro escolar. Ya puedes continuar.');
+    $('decisionBtn').style.display='inline-flex';
+    $('decisionBtn').focus();
+    update();
+  }
+}
 function showDecision(){goStep(4)}
 function finalDecision(btn,good){if(btn.disabled)return;btn.disabled=true;decisionCount++;if(good){btn.classList.add('correct');score+=15;setFeedback('decisionFeedback',true,'✅ Correcto: no se comparte una noticia sin confirmar.')}else{btn.classList.add('wrong');setFeedback('decisionFeedback',false,'⚠️ Reenviar “por si acaso” también propaga el rumor.')}if(decisionCount>=2)$('finishA3').style.display='inline-flex';update()}
 function completeA3(){mission=4;update();simpleAdvancedIndex=0;renderSimpleAdvanced();show('simpleAdvanced')}
