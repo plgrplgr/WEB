@@ -1,4 +1,4 @@
-# Academia Digital PLGRPLGR · V7.1
+# Academia Digital PLGRPLGR · V7.2
 
 Aplicación web educativa estática para niños y niñas, diseñada con lenguaje sencillo, navegación por teclado y actividades diferenciadas por edad.
 
@@ -16,7 +16,7 @@ Aplicación web educativa estática para niños y niñas, diseñada con lenguaje
 - Módulo 6: Toma el control de tu tiempo digital.
 - Módulos 7 y 8: próximos.
 
-## V7.1
+## V7.2
 
 - Portada rediseñada en dos vistas: módulos 1-4 y módulos 5-8.
 - Nuevos módulos 1 y 2 con 12 retos cada uno.
@@ -27,6 +27,9 @@ Aplicación web educativa estática para niños y niñas, diseñada con lenguaje
   4. Conflicto y desenlace final.
 - Módulo 4 actualizado en portada a 12 retos y “Varias misiones según tu edad”.
 - Revisión general de accesibilidad: foco visible, controles con tamaño mínimo, mensajes `aria-live` y reducción de movimiento.
+- Módulo 1: se cambia “¿Qué página da mejor espina?” por “¿Qué página te da más confianza?”.
+- Módulo 5: nuevo juego “El Castillo de las Contraseñas”, con 4 muros que se construyen al reconocer contraseñas de ejemplo más robustas. El juego recuerda no usar contraseñas reales.
+
 
 ## Uso local
 

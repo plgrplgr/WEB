@@ -1,4 +1,4 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Retos y juegos sobre bienestar, seguridad y relaciones sanas en internet."><title>Módulo 5 · Bienestar digital</title><link rel="stylesheet" href="css/styles.css"><style>.mini-game{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0}.game-card{border:3px solid #86efac;background:#f0fdf4;border-radius:16px;padding:12px;font-weight:900;cursor:pointer;min-height:72px}.game-card.done{background:#d1fae5;border-color:#10b981}.game-card.wrong{background:#fee2e2;border-color:#ef4444}.game-line{padding:10px;border:2px dashed #10b981;border-radius:14px;background:#f0fdf4;font-weight:800}@media(max-width:700px){.mini-game{grid-template-columns:repeat(2,1fr)}.game-card{min-height:54px}}</style></head><body><main class="shell"><div class="topbar"><a class="back" href="index.html">← Inicio</a><span class="pill">🔋 Energía: <span id="energy">0</span>/12</span></div><section class="hero green"><span class="eyebrow">🌿 Módulo 5</span><h1>Cuida tu batería interna</h1><p>Tú decides cuándo usar la pantalla. Protege tu cuerpo, tus emociones, tus datos y tus amistades.</p></section>
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Retos y juegos sobre bienestar, seguridad y relaciones sanas en internet."><title>Módulo 5 · Bienestar digital</title><link rel="stylesheet" href="css/styles.css"><style>.mini-game{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0}.game-card{border:3px solid #86efac;background:#f0fdf4;border-radius:16px;padding:12px;font-weight:900;cursor:pointer;min-height:72px}.game-card.done{background:#d1fae5;border-color:#10b981}.game-card.wrong{background:#fee2e2;border-color:#ef4444}.game-line{padding:10px;border:2px dashed #10b981;border-radius:14px;background:#f0fdf4;font-weight:800}.castle-wrap{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.6fr);gap:14px;align-items:center;margin:8px 0}.castle-view{border:3px solid #cbd5e1;border-radius:18px;background:#f8fafc;padding:12px;text-align:center}.castle-icon{font-size:clamp(52px,8vw,84px);line-height:1}.castle-walls{display:flex;justify-content:center;gap:6px;margin-top:8px;min-height:34px}.wall{font-size:28px;filter:grayscale(1);opacity:.35}.wall.strong{filter:none;opacity:1}.monster{font-size:36px;min-height:44px}.castle-round{font-weight:900;margin-bottom:8px}.castle-tip{font-size:15px;color:#475569;margin:6px 0}.castle-options{display:grid;grid-template-columns:1fr;gap:8px}.castle-option{border:2px solid #cbd5e1;background:#fff;border-radius:14px;padding:11px 13px;text-align:left;font-weight:900;cursor:pointer;min-height:48px}.castle-option:hover,.castle-option:focus-visible{border-color:#16a34a;background:#f0fdf4}.castle-option.weak{border-color:#ef4444;background:#fef2f2}.castle-option.strong{border-color:#10b981;background:#ecfdf5}.castle-next{margin-top:10px}@media(max-width:700px){.mini-game{grid-template-columns:repeat(2,1fr)}.game-card{min-height:54px}.castle-wrap{grid-template-columns:1fr}.castle-view{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px}.castle-icon{font-size:48px}.monster{font-size:30px}.castle-walls{margin:0}.castle-tip{font-size:14px}}</style></head><body><main class="shell"><div class="topbar"><a class="back" href="index.html">← Inicio</a><span class="pill">🔋 Energía: <span id="energy">0</span>/12</span></div><section class="hero green"><span class="eyebrow">🌿 Módulo 5</span><h1>Cuida tu batería interna</h1><p>Tú decides cuándo usar la pantalla. Protege tu cuerpo, tus emociones, tus datos y tus amistades.</p></section>
 <section class="screen active" id="intro"><div class="grid"><div class="card"><div class="icon">🔋</div><h2>1. Carga tu energía</h2><p>Elige hábitos que ayudan a descansar y concentrarte.</p></div><div class="card"><div class="icon">💬</div><h2>2. Cuida a los demás</h2><p>Practica respuestas amables y seguras.</p></div><div class="card"><div class="icon">🚩</div><h2>3. Detecta señales raras</h2><p>Incluye un juego para ordenar cómo actuar ante un problema.</p></div><div class="card"><div class="icon">🔐</div><h2>4. Protege tu casa digital</h2><p>Revisa contraseñas, permisos, enlaces y personas desconocidas.</p></div></div><div class="actions"><button class="btn green" onclick="start()">Empezar los retos</button></div></section>
 <section class="screen" id="game"><div class="progress-wrap"><div class="progress"><div id="bar"></div></div><b id="count"></b></div><div class="emoji-row" id="emoji"></div><p class="big-question" id="question"></p><div class="panel" id="story"></div><div id="activity"></div><div class="feedback" id="feedback" role="status" aria-live="polite"></div><div class="actions"><button class="btn green hidden" id="next">Siguiente</button></div></section>
 <section class="screen" id="plan"><h2>Mi plan de batería 🔋</h2><p>Escribe una pequeña regla que puedas probar hoy.</p><label for="rule"><b>Cuando lleve mucho rato con una pantalla, voy a...</b></label><textarea class="input-box" id="rule" placeholder="Ejemplo: parar, levantarme y mirar por la ventana."></textarea><div class="feedback" id="planFeedback" role="status" aria-live="polite"></div><div class="actions"><button class="btn green" onclick="savePlan()">Guardar mi plan</button></div></section>
@@ -10,14 +10,69 @@ const challenges=[
 {type:'sequence',emoji:'🛡️🚩',q:'Juego · Ordena el escudo de seguridad',story:'Una persona desconocida te amenaza en un chat. Toca las 4 acciones en un orden seguro.',steps:['🛑 Corto la conversación','📸 Guardo una prueba','🚫 Bloqueo o reporto','🧑‍🏫 Se lo cuento a un adulto'],shuffle:['🚫 Bloqueo o reporto','🧑‍🏫 Se lo cuento a un adulto','🛑 Corto la conversación','📸 Guardo una prueba'],e:'¡Escudo activado! No sigues la pelea, conservas pruebas y pides ayuda.'},
 {type:'mcq',emoji:'📸🔒',q:'Alguien pide una foto privada.',story:'Dice que no se lo cuentes a nadie.',o:['🛑 Digo no y se lo cuento a un adulto','🤫 La envío en secreto'],a:0,e:'La presión y los secretos son señales de alarma.'},
 {type:'mcq',emoji:'🔗😮',q:'Te llega “Mira quién sale en este vídeo”.',story:'El enlace es raro y no esperabas el mensaje.',o:['🔍 No lo abro y pregunto por otro medio','👆 Lo abro rápido'],a:0,e:'Un enlace raro puede intentar engañarte.'},
-{type:'mcq',emoji:'🔑🧩',q:'Debes crear una contraseña.',story:'¿Cuál protege mejor tu cuenta?',o:['🦊Luna!Salta27Bosque','1234pedro'],a:0,e:'Una frase larga y difícil de adivinar es más segura.'},
+{type:'passwordCastle',emoji:'🏰🔐',q:'Juego · El Castillo de las Contraseñas',story:'Construye 4 muros de piedra eligiendo contraseñas fuertes. No uses nunca una contraseña real tuya.',e:'¡Fortaleza impenetrable! Las contraseñas largas, difíciles de adivinar y con varios tipos de caracteres protegen mejor.'},
 {type:'mcq',emoji:'📍🎤',q:'Una app de linterna pide ubicación y micrófono.',story:'No necesita esos datos para encender la luz.',o:['⚙️ No doy esos permisos','✅ Acepto todo'],a:0,e:'Da solo los permisos que una app necesita.'},
 {type:'mcq',emoji:'🍽️📱',q:'Estás comiendo con tu familia.',story:'El móvil vibra varias veces.',o:['🙋 Lo dejo boca abajo y sigo hablando','📲 Respondo a todo mientras comemos'],a:0,e:'Compartir tiempo sin pantallas cuida las relaciones.'},
 {type:'mcq',emoji:'😟❤️',q:'Una red social te hace sentir peor contigo.',story:'Llevas varios días comparándote con otras personas.',o:['🗣️ Hago una pausa y lo cuento a un adulto','🔁 Sigo mirando para acostumbrarme'],a:0,e:'Pedir ayuda y descansar de una app también es cuidarse.'},
 {type:'mcq',emoji:'🎮⏰',q:'Llevas mucho tiempo jugando.',story:'Habías quedado en hacer otra actividad.',o:['⏸️ Termino la partida y cumplo mi plan','🎮 Empiezo otra partida sin avisar'],a:0,e:'Poner límites ayuda a que haya tiempo para todo.'},
 {type:'mcq',emoji:'🧑‍🤝‍🧑🔐',q:'Un amigo te cuenta algo privado.',story:'Te pide que no lo compartas.',o:['🤐 Respeto su privacidad y pido ayuda si hay peligro','📢 Lo cuento en el grupo para hacer una broma'],a:0,e:'Cuidar la privacidad de otras personas también importa.'}
 ];
-let i=0,e=0,seq=0;const $=id=>document.getElementById(id);function start(){showScreen('game');render()}function render(){const d=challenges[i];seq=0;$('emoji').textContent=d.emoji;$('question').textContent=d.q;$('story').textContent='📖 '+d.story;$('activity').innerHTML='';$('feedback').className='feedback';$('next').classList.add('hidden');$('count').textContent=(i+1)+'/'+challenges.length;$('bar').style.width=(i/challenges.length*100)+'%';if(d.type==='sequence')renderSequence(d);else renderMcq(d)}
+let i=0,e=0,seq=0,castleRound=0,castleStrong=0;const $=id=>document.getElementById(id);function start(){showScreen('game');render()}function render(){const d=challenges[i];seq=0;$('emoji').textContent=d.emoji;$('question').textContent=d.q;$('story').textContent='📖 '+d.story;$('activity').innerHTML='';$('feedback').className='feedback';$('next').classList.add('hidden');$('count').textContent=(i+1)+'/'+challenges.length;$('bar').style.width=(i/challenges.length*100)+'%';if(d.type==='sequence')renderSequence(d);else if(d.type==='passwordCastle')renderPasswordCastle(d);else renderMcq(d)}
+
+const castleRounds=[
+  {q:'Muro 1 · ¿Cuál es más difícil de adivinar?',o:['12345','messi','Luna!Salta27'],a:2},
+  {q:'Muro 2 · Elige una contraseña que no use datos fáciles.',o:['Pedro2016','GatoAzul#82','password'],a:1},
+  {q:'Muro 3 · ¿Cuál combina longitud y variedad?',o:['qwerty','MiCasa','Bosque!Nube7Río'],a:2},
+  {q:'Muro 4 · Última defensa del castillo.',o:['futbol10','Verano2026','Koala#Salta8Luna'],a:2}
+];
+function renderPasswordCastle(d){
+  castleRound=0;castleStrong=0;
+  const wrap=document.createElement('div');wrap.className='castle-wrap';wrap.innerHTML=`
+    <div class="castle-view" aria-label="Fortaleza digital">
+      <div><div class="castle-icon" aria-hidden="true">🏰</div><div class="castle-walls" id="castleWalls" aria-label="Muros construidos">${'<span class="wall">🧱</span>'.repeat(4)}</div></div>
+      <div><div class="monster" id="castleMonster" aria-hidden="true">👾</div><b id="castleScore">0 de 4 muros de piedra</b></div>
+    </div>
+    <div>
+      <div class="castle-round" id="castleRoundTitle"></div>
+      <p class="castle-tip">💡 Pista: busca una frase larga y difícil de adivinar. Mezclar mayúsculas, números y símbolos puede hacerla más fuerte.</p>
+      <div class="castle-options" id="castleOptions"></div>
+      <button class="btn green castle-next hidden" id="castleNext" type="button">Siguiente muro</button>
+    </div>`;
+  $('activity').appendChild(wrap);renderCastleRound(d);
+}
+function renderCastleRound(d){
+  const r=castleRounds[castleRound];
+  $('castleRoundTitle').textContent=r.q;
+  $('castleOptions').innerHTML='';
+  $('castleNext').classList.add('hidden');
+  r.o.forEach((text,n)=>{
+    const b=document.createElement('button');b.type='button';b.className='castle-option';b.textContent=text;
+    b.setAttribute('aria-label','Contraseña de ejemplo: '+text);
+    b.onclick=()=>chooseCastlePassword(b,n===r.a,d);
+    $('castleOptions').appendChild(b);
+  });
+}
+function chooseCastlePassword(btn,ok,d){
+  if(ok){
+    document.querySelectorAll('#castleOptions .castle-option').forEach(x=>x.disabled=true);
+    btn.classList.add('strong');castleStrong++;
+    const walls=[...document.querySelectorAll('#castleWalls .wall')];if(walls[castleStrong-1])walls[castleStrong-1].classList.add('strong');
+    $('castleScore').textContent=castleStrong+' de 4 muros de piedra';
+    $('castleMonster').textContent='😵';
+    setFeedback('feedback',true,'🧱 ¡Muro de piedra! Esa contraseña de ejemplo es larga y difícil de adivinar.');
+    if(castleRound===castleRounds.length-1){
+      e++;$('energy').textContent=e;$('castleMonster').textContent='🏳️';setFeedback('feedback',true,d.e);$('next').classList.remove('hidden');$('next').focus();
+    }else{
+      $('castleNext').classList.remove('hidden');$('castleNext').focus();
+      $('castleNext').onclick=()=>{castleRound++;$('castleMonster').textContent='👾';setFeedback('feedback',true,'Nuevo muro: el monstruo vuelve a intentarlo.');renderCastleRound(d)};
+    }
+  }else{
+    btn.classList.add('weak');$('castleMonster').textContent='💥👾';
+    setFeedback('feedback',false,'🌾 Muro de paja: esa contraseña es demasiado corta, común o fácil de adivinar. Prueba otra.');
+    setTimeout(()=>{btn.classList.remove('weak');$('castleMonster').textContent='👾'},650);
+  }
+}
+
 function renderMcq(d){const c=document.createElement('div');c.className='choices';d.o.forEach((x,n)=>{const b=document.createElement('button');b.className='choice';b.textContent=x;b.onclick=()=>{const ok=n===d.a;markChoice(b,ok,'#activity');if(ok){e++;$('energy').textContent=e}setFeedback('feedback',ok,(ok?'¡Buena decisión! ':'Casi. ')+d.e);$('next').classList.remove('hidden');$('next').focus()};c.appendChild(b)});$('activity').appendChild(c)}
 function renderSequence(d){const line=document.createElement('div');line.id='gameLine';line.className='game-line';line.textContent='Tu escudo: todavía vacío';$('activity').appendChild(line);const g=document.createElement('div');g.className='mini-game';d.shuffle.forEach(text=>{const b=document.createElement('button');b.className='game-card';b.textContent=text;b.onclick=()=>pick(b,text,d);g.appendChild(b)});$('activity').appendChild(g)}
 function pick(btn,text,d){if(btn.disabled)return;if(text===d.steps[seq]){btn.disabled=true;btn.classList.add('done');seq++;$('gameLine').textContent='Tu escudo: '+d.steps.slice(0,seq).join(' → ');setFeedback('feedback',true,'Bien. Sigue con el siguiente paso.');if(seq===d.steps.length){e++;$('energy').textContent=e;setFeedback('feedback',true,d.e);$('next').classList.remove('hidden');$('next').focus()}}else{btn.classList.add('wrong');setFeedback('feedback',false,'Ese paso no va ahora. Piensa qué debes hacer primero.');setTimeout(()=>btn.classList.remove('wrong'),500)}}
