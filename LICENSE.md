@@ -1,24 +1,15 @@
-# Licencia Creative Commons Reconocimiento 4.0 Internacional
+# Creative Commons Reconocimiento 4.0 Internacional (CC BY 4.0)
 
-La aplicación **Academia Digital PLGRPLGR** se publica bajo la licencia
-**Creative Commons Reconocimiento 4.0 Internacional (CC BY 4.0)**.
+Esta aplicación, **Academia Digital PLGRPLGR**, se distribuye bajo la licencia Creative Commons Reconocimiento 4.0 Internacional (CC BY 4.0).
 
-Puedes:
+Puedes compartir y adaptar el material para cualquier propósito, incluso comercial, siempre que:
 
-- Compartir: copiar y redistribuir el material en cualquier medio o formato.
-- Adaptar: remezclar, transformar y crear a partir del material.
-- Utilizarlo con fines educativos, artísticos o comerciales.
+- indiques el origen: **Academia Digital PLGRPLGR**;
+- incluyas una referencia a la licencia CC BY 4.0;
+- indiques si has realizado cambios.
 
-Debes:
+Texto oficial de la licencia: https://creativecommons.org/licenses/by/4.0/deed.es
 
-- Indicar el origen de la aplicación.
-- Incluir un enlace a la licencia CC BY 4.0.
-- Indicar si has realizado cambios.
-- No sugerir que PLGRPLGR apoya o aprueba tu versión.
-
-Atribución recomendada:
+Atribución sugerida:
 
 > Basado en “Academia Digital PLGRPLGR”, de PLGRPLGR, bajo licencia CC BY 4.0. Esta versión contiene modificaciones.
-
-Texto oficial de la licencia:
-https://creativecommons.org/licenses/by/4.0/deed.es

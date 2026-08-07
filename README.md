@@ -1,12 +1,32 @@
-# Academia Digital PLGRPLGR
+# Academia Digital PLGRPLGR · V7.0
 
-Aplicación web estática para niños y niñas de 9 a 12 años.
+Aplicación web educativa estática para niños y niñas, diseñada con lenguaje sencillo, navegación por teclado y actividades diferenciadas por edad.
 
-## Módulos
+## Módulos disponibles
 
+- Módulo 1: Busca información de forma eficaz y segura.
+  - 9-11 años: 6 retos.
+  - 11-13 años: 6 retos.
+- Módulo 2: Diseña contenidos y expresa tu creatividad digital.
+  - 9-11 años: 6 retos.
+  - 11-13 años: 6 retos.
 - Módulo 3: Inteligencia Artificial.
-- Módulo 4: Detectives de noticias falsas.
-- Módulo 5: Bienestar digital, seguridad y relaciones sanas en internet.
+- Módulo 4: Detectives contra las Fake News (12 retos, 6 por grupo de edad).
+- Módulo 5: Bienestar digital.
+- Módulo 6: Toma el control de tu tiempo digital.
+- Módulos 7 y 8: próximos.
+
+## V7.0
+
+- Portada rediseñada en dos vistas: módulos 1-4 y módulos 5-8.
+- Nuevos módulos 1 y 2 con 12 retos cada uno.
+- Módulo 2 usa la misma terminología en ambos grupos de edad:
+  1. Personaje (héroes o villanos).
+  2. Lugar o mundo.
+  3. Problema y trama.
+  4. Conflicto y desenlace final.
+- Módulo 4 actualizado en portada a 12 retos y “Varias misiones según tu edad”.
+- Revisión general de accesibilidad: foco visible, controles con tamaño mínimo, mensajes `aria-live` y reducción de movimiento.
 
 ## Uso local
 
@@ -16,38 +36,10 @@ Abre `index.html` en un navegador o usa un servidor estático:
 python3 -m http.server 8000
 ```
 
-Después visita `http://localhost:8000`.
-
 ## Publicación
 
-El contenido está preparado para GitHub Pages y no necesita compilación.
+Preparada para GitHub Pages. No necesita compilación ni backend.
 
-## Accesibilidad
+## Licencia
 
-- Navegación completa con teclado.
-- Mensajes de respuesta anunciados mediante `aria-live`.
-- Estados correctos e incorrectos indicados con texto, no solo con color.
-- Compatibilidad con `prefers-reduced-motion`.
-
-
-## Versión 6
-- Módulo 5 ampliado a 12 retos.
-- Nuevo módulo 6 con 8 retos sobre control del tiempo digital.
-- Mejoras de visibilidad de botones, tipografía para proyector y navegación sin scroll.
-
-## V6.2
-- Módulo 4 dividido en dos rutas por edad.
-- Ruta 9-11: 3 retos nuevos con lenguaje sencillo.
-- Ruta 11-13: 3 retos anteriores y 3 retos nuevos.
-
-
-## Versión 5.3
-
-- Añadida la licencia Creative Commons Reconocimiento 4.0 Internacional (CC BY 4.0).
-- La aplicación puede copiarse, compartirse y adaptarse, incluso con fines comerciales, siempre que se indique el origen, se enlace la licencia y se señalen los cambios realizados.
-
-## Atribución recomendada
-
-> Basado en “Academia Digital PLGRPLGR”, de PLGRPLGR, bajo licencia CC BY 4.0. Esta versión contiene modificaciones.
-
-Consulta `LICENSE.md` para más información.
+Academia Digital PLGRPLGR se publica bajo Creative Commons Reconocimiento 4.0 Internacional (CC BY 4.0). Se permite reutilizar y adaptar el material, también con fines comerciales, siempre que se indique el origen, se enlace la licencia y se señalen los cambios realizados.

@@ -49,7 +49,7 @@ h2{font-size:clamp(28px,4vh,40px);margin:0 0 5px}.lead{color:var(--muted);font-s
         <button class="btn junior" onclick="startJunior()">Empezar 6 retos</button>
       </article>
       <article class="route-card advanced">
-        <div><div class="icon">🔵🔎</div><span class="age-badge">Edad recomendada: 11-13 años</span><h3>Detectives avanzados</h3><p>Seis retos para investigar titulares, fuentes, imágenes, opiniones y datos.</p><ul><li>Los 3 retos actuales</li><li>Hecho u opinión</li><li>Imagen fuera de contexto</li><li>El dato tramposo</li></ul></div>
+        <div><div class="icon">🔵🔎</div><span class="age-badge">Edad recomendada: 11-13 años</span><h3>Detectives avanzados</h3><p>Seis retos para investigar titulares, fuentes, imágenes, opiniones y datos.</p><ul><li>Noticias</li><li>Hecho u opinión</li><li>Imagen fuera de contexto</li><li>El dato tramposo</li></ul></div>
         <button class="btn advanced" onclick="startAdvanced()">Empezar 6 retos</button>
       </article>
     </div>
@@ -171,5 +171,6 @@ function resetAdvancedState(){hIndex=0;sIndex=0;selectedGood=0;selectedTotal=0;d
 function finishRoute(kind){mission=total;update();$('finalScore').textContent=score;if(kind==='junior'){$('finalTitle').textContent='¡Detective junior graduado!';$('finalText').textContent='Ya sabes parar, comprobar y decidir antes de compartir.';$('finalRules').innerHTML='<div class="rule">✋<b>Me paro</b></div><div class="rule">🔎<b>Compruebo</b></div><div class="rule">✅<b>Decido</b></div>'}else{$('finalTitle').textContent='¡Detective avanzado graduado!';$('finalText').textContent='Has investigado titulares, fuentes, rumores, opiniones, imágenes y datos.';$('finalRules').innerHTML='<div class="rule">📰<b>Lee más allá del titular</b></div><div class="rule">👤<b>Revisa autor y pruebas</b></div><div class="rule">🔎<b>Compara antes de compartir</b></div>'}show('final')}
 update();
 </script>
+<script src="js/accessibility.js"></script>
 </body>
 </html>

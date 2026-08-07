@@ -1,104 +1,47 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Academia digital con módulos interactivos para aprender Inteligencia Artificial y detectar Fake News.">
-  <title>Academia Digital PLGRPLGR</title>
-  <style>
-    :root{
-      --bg:#f3f6ff;--card:#fff;--text:#172033;--muted:#64748b;--line:#dbe3f2;
-      --ia:#4f46e5;--ia-dark:#3730a3;--fake:#dc2626;--fake-dark:#991b1b;--well:#059669;--well-dark:#047857;--soon:#64748b;--time:#ea580c;--time-dark:#9a3412;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;font-family:Arial,Helvetica,sans-serif;background:
-      radial-gradient(circle at 15% 10%,#e0e7ff 0,transparent 28%),
-      radial-gradient(circle at 90% 90%,#fee2e2 0,transparent 26%),var(--bg);color:var(--text);padding:28px 18px}
-    main{max-width:1120px;margin:auto}
-    header{text-align:center;margin-bottom:30px}
-    .eyebrow{display:inline-block;padding:7px 13px;border-radius:999px;background:#fff;border:1px solid var(--line);font-weight:800;color:#475569;margin-bottom:12px}
-    h1{font-size:clamp(34px,6vw,58px);margin:0 0 10px;letter-spacing:-1.5px}
-    header p{font-size:clamp(17px,2vw,20px);color:var(--muted);max-width:760px;margin:0 auto;line-height:1.55}
-    .modules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
-    .module{background:var(--card);border-radius:26px;padding:28px;border:2px solid var(--line);box-shadow:0 18px 44px rgba(15,23,42,.10);display:flex;flex-direction:column;min-height:390px;position:relative;overflow:hidden}
-    .module::after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;right:-70px;top:-70px;opacity:.10;pointer-events:none;z-index:0}.module>*{position:relative;z-index:1}
-    .module.ia{border-color:#c7d2fe}.module.ia::after{background:var(--ia)}
-    .module.fake{border-color:#fecaca}.module.fake::after{background:var(--fake)}.module.time{border-color:#fed7aa}.module.time::after{background:var(--time)}.module.well{border-color:#a7f3d0}.module.well::after{background:var(--well)}
-    .number{font-weight:900;letter-spacing:.08em;text-transform:uppercase;font-size:14px;margin-bottom:12px}
-    .ia .number{color:var(--ia)}.fake .number{color:var(--fake)}.time .number{color:var(--time)}.well .number{color:var(--well)}
-    .icon{font-size:70px;line-height:1;margin-bottom:12px}
-    h2{font-size:30px;margin:0 0 10px}
-    .module p{color:var(--muted);line-height:1.55;font-size:17px;margin:0 0 16px}
-    .tags{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 22px}
-    .tag{font-size:14px;font-weight:800;padding:7px 10px;border-radius:999px;background:#f8fafc;border:1px solid var(--line)}
-    .btn{position:relative;z-index:5;pointer-events:auto;margin-top:auto;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 20px;border-radius:15px;color:white;text-decoration:none;font-size:18px;font-weight:900;box-shadow:0 8px 0 rgba(15,23,42,.15);transition:.2s}
-    .btn:hover,.btn:focus{transform:translateY(-2px);box-shadow:0 10px 0 rgba(15,23,42,.15)}
-    .ia .btn{background:var(--ia)}.ia .btn:hover,.ia .btn:focus{background:var(--ia-dark)}
-    .fake .btn{background:var(--fake)}.fake .btn:hover,.fake .btn:focus{background:var(--fake-dark)}.time .btn{background:var(--time)}.time .btn:hover,.time .btn:focus{background:var(--time-dark)}.well .btn{background:var(--well)}.well .btn:hover,.well .btn:focus{background:var(--well-dark)}
-    .future{margin-top:24px;background:rgba(255,255,255,.72);border:1px dashed #94a3b8;border-radius:18px;padding:16px;text-align:center;color:#475569}
-    footer{text-align:center;color:var(--muted);font-size:14px;margin-top:22px;line-height:1.35}footer a{color:#3730a3;font-weight:800;text-decoration:underline;text-underline-offset:2px}footer a:hover,footer a:focus{color:#1e1b4b}
-    @media(max-width:760px){.modules{grid-template-columns:1fr}.module{min-height:0}h1{letter-spacing:-.5px}}
-  
-    html,body{height:100%;overflow:hidden}body{padding:clamp(10px,2vh,22px) 16px}main{height:100%;display:flex;flex-direction:column}header{margin-bottom:clamp(10px,2vh,20px)}.modules{flex:1;min-height:0;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(10px,1.5vw,18px)}.module{min-height:0;padding:clamp(14px,2vh,24px)}.icon{font-size:clamp(42px,7vh,64px)}h2{font-size:clamp(21px,3vh,28px)}.module p{font-size:clamp(14px,1.9vh,17px);line-height:1.35}.tags{margin-bottom:12px}.future,footer{margin-top:8px;padding:8px;font-size:13px}@media(max-width:760px){.modules{grid-template-columns:repeat(4,minmax(78vw,1fr));overflow-x:auto;scroll-snap-type:x mandatory}.module{scroll-snap-align:center}.future{display:none}header p{font-size:15px;line-height:1.3}h1{font-size:clamp(28px,8vw,40px)}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Academia Digital PLGRPLGR: ocho módulos educativos de ciudadanía digital para niños y niñas.">
+<title>Academia Digital PLGRPLGR · V7.0</title>
+<style>
+:root{--bg:#f5f7ff;--ink:#172033;--muted:#5c6880;--card:#fff;--line:#dbe3f2;--shadow:0 14px 34px rgba(15,23,42,.10);--blue:#2563eb;--red:#dc2626;--violet:#4f46e5;--green:#059669;--orange:#ea580c;--pink:#db2777;--gray:#64748b}
+*{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden}body{font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at 10% 0,#dbeafe,transparent 30%),radial-gradient(circle at 95% 95%,#fce7f3,transparent 28%),var(--bg);color:var(--ink)}
+main{height:100dvh;max-width:1220px;margin:auto;padding:clamp(10px,2vh,22px);display:flex;flex-direction:column;gap:10px}.top{text-align:center;flex:0 0 auto}.eyebrow{display:inline-block;background:#fff;border:2px solid var(--line);border-radius:999px;padding:6px 12px;font-weight:900}.top h1{margin:6px 0 4px;font-size:clamp(30px,5vh,52px);line-height:1}.top p{margin:0 auto;max-width:820px;color:var(--muted);font-size:clamp(17px,2.2vh,21px);line-height:1.3}
+.pager{display:flex;justify-content:center;gap:10px;align-items:center}.pager button{border:2px solid #cbd5e1;background:#fff;color:var(--ink);border-radius:999px;padding:9px 16px;font-weight:900;cursor:pointer}.pager button[aria-current="page"]{background:#172033;color:#fff;border-color:#172033}
+.page{display:none;flex:1;min-height:0}.page.active{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(10px,1.4vw,18px)}.module{background:var(--card);border:3px solid var(--line);border-radius:24px;padding:clamp(14px,2vh,22px);box-shadow:var(--shadow);display:flex;flex-direction:column;min-height:0;position:relative;overflow:hidden}.module::after{content:"";position:absolute;width:150px;height:150px;border-radius:50%;right:-65px;top:-65px;background:var(--accent);opacity:.11;pointer-events:none}.module>*{position:relative;z-index:1}.module .number{font-weight:900;color:var(--accent);font-size:16px}.icon{font-size:clamp(42px,7vh,68px);line-height:1;margin:5px 0}.module h2{font-size:clamp(22px,3vh,31px);line-height:1.05;margin:4px 0 8px}.module p{font-size:clamp(16px,2vh,20px);line-height:1.3;color:var(--muted);margin:0 0 10px}.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}.tag{font-weight:800;font-size:14px;background:#f8fafc;border:1px solid var(--line);border-radius:999px;padding:5px 8px}.enter{margin-top:auto;display:flex;align-items:center;justify-content:center;text-decoration:none;color:#fff;background:var(--accent);border-radius:14px;padding:12px 10px;font-weight:900;font-size:clamp(17px,2.1vh,20px);min-height:50px}.soon .enter{background:#e2e8f0;color:#475569;pointer-events:none}.soon{opacity:.88}
+.status{flex:0 0 auto;text-align:center;background:rgba(255,255,255,.9);border:2px dashed #94a3b8;border-radius:14px;padding:7px 12px;font-size:clamp(14px,1.8vh,17px)}footer{flex:0 0 auto;text-align:center;color:var(--muted);font-size:13px}.license{font-size:12px}.license a{color:#334155}
+.m1{--accent:#0284c7}.m2{--accent:#db2777}.m3{--accent:#4f46e5}.m4{--accent:#dc2626}.m5{--accent:#059669}.m6{--accent:#ea580c}.m7{--accent:#7c3aed}.m8{--accent:#64748b}
+@media(max-width:900px){.page.active{grid-template-columns:repeat(2,minmax(0,1fr))}.top p{display:none}.module p{font-size:16px}.tags{display:none}}
+@media(max-width:560px){.page.active{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.module{padding:10px;border-radius:18px}.icon{font-size:40px}.module h2{font-size:18px}.module p{font-size:14px}.enter{font-size:15px;min-height:44px;padding:8px}.status{font-size:12px}.license{display:none}.top h1{font-size:28px}}
+</style>
 </head>
 <body>
 <main>
-  <header>
-    <div class="eyebrow">Academia Digital PLGRPLGR</div>
-    <h1>Aprender tecnología jugando</h1>
-    <p>Elige un módulo. Cada uno contiene retos interactivos para pensar, decidir y aprender a moverse con criterio por el mundo digital.</p>
-  </header>
-
-  <section class="modules" aria-label="Módulos disponibles">
-    <article class="module ia">
-      <div class="number">Módulo 3</div>
-      <div class="icon" aria-hidden="true">🤖🧠</div>
-      <h2>Inteligencia Artificial</h2>
-      <p>Cuatro ejercicios para descubrir cómo aprende una IA, cómo escribir buenos prompts y cómo usarla de forma crítica y segura.</p>
-      <div class="tags" aria-label="Contenido del módulo">
-        <span class="tag">4 ejercicios</span><span class="tag">Prompts</span><span class="tag">Sesgos</span><span class="tag">Alucinaciones</span>
-      </div>
-      <a class="btn" href="modulo_3_ia.html">Entrar en el módulo 3 <span aria-hidden="true">→</span></a>
-    </article>
-
-    <article class="module fake">
-      <div class="number">Módulo 4</div>
-      <div class="icon" aria-hidden="true">🕵️‍♀️📰</div>
-      <h2>Detectives contra las Fake News</h2>
-      <p>Tres misiones para reconocer noticias sospechosas, evaluar fuentes y contrastar información antes de compartirla.</p>
-      <div class="tags" aria-label="Contenido del módulo">
-        <span class="tag">3 retos</span><span class="tag">Titulares</span><span class="tag">Fuentes</span><span class="tag">Contraste</span>
-      </div>
-      <a class="btn" href="modulo_4_fake_news.html">Entrar en el módulo 4 <span aria-hidden="true">→</span></a>
-    </article>
-
-    <article class="module well">
-      <div class="number">Módulo 5</div>
-      <div class="icon" aria-hidden="true">🔋🛡️</div>
-      <h2>Bienestar digital</h2>
-      <p>Retos para cuidar tu tiempo, tu descanso, tus amistades y tu seguridad en internet.</p>
-      <div class="tags" aria-label="Contenido del módulo">
-        <span class="tag">8 retos</span><span class="tag">Descanso</span><span class="tag">Empatía</span><span class="tag">Seguridad</span>
-      </div>
-      <a class="btn" href="modulo_5_bienestar_digital.html">Entrar en el módulo 5 <span aria-hidden="true">→</span></a>
-    </article>
-  
-    <article class="module time"><div class="number">Módulo 6</div><div class="icon" aria-hidden="true">⏰📵</div><h2>Controla tu tiempo digital</h2><p>Ocho retos para reconocer señales de alerta, reducir distracciones y crear un plan digital sano.</p><div class="tags"><span class="tag">8 retos</span><span class="tag">Notificaciones</span><span class="tag">Límites</span><span class="tag">FOMO</span></div><a class="btn" href="modulo_6_tiempo_digital.html">Entrar en el módulo 6 →</a></article>
+<header class="top"><div class="eyebrow">Academia Digital PLGRPLGR</div><h1>Aprender tecnología jugando</h1><p>Elige un módulo. Hay juegos y retos para aprender a usar internet con seguridad, creatividad y sentido común.</p></header>
+<nav class="pager" aria-label="Páginas de módulos"><button id="page1Btn" aria-current="page" aria-controls="page1">Módulos 1-4</button><button id="page2Btn" aria-controls="page2">Módulos 5-8 →</button></nav>
+<section class="page active" id="page1" aria-label="Módulos 1 a 4">
+<article class="module m1"><div class="number">Módulo 1</div><div class="icon" aria-hidden="true">🌐🔎</div><h2>Busca información segura</h2><p>Aprende cómo funciona internet, cómo buscar mejor y cómo reconocer páginas sospechosas.</p><div class="tags"><span class="tag">12 retos</span><span class="tag">Búsqueda</span><span class="tag">Seguridad</span></div><a class="enter" href="modulo_1_busqueda_segura.html">Entrar en el módulo 1 →</a></article>
+<article class="module m2"><div class="number">Módulo 2</div><div class="icon" aria-hidden="true">🎨📖</div><h2>Creatividad digital</h2><p>Crea historias, transforma ideas y aprende a respetar el trabajo de otras personas.</p><div class="tags"><span class="tag">12 retos</span><span class="tag">Historias</span><span class="tag">Creación</span></div><a class="enter" href="modulo_2_creatividad_digital.html">Entrar en el módulo 2 →</a></article>
+<article class="module m3"><div class="number">Módulo 3</div><div class="icon" aria-hidden="true">🤖🧠</div><h2>Inteligencia Artificial</h2><p>Descubre cómo aprende una IA, cómo pedirle cosas y cómo usarla de forma segura.</p><div class="tags"><span class="tag">4 ejercicios</span><span class="tag">Prompts</span><span class="tag">IA segura</span></div><a class="enter" href="modulo_3_ia.html">Entrar en el módulo 3 →</a></article>
+<article class="module m4"><div class="number">Módulo 4</div><div class="icon" aria-hidden="true">🕵️‍♀️📰</div><h2>Detectives contra las Fake News</h2><p>Varias misiones según tu edad para descubrir noticias sospechosas y comprobar antes de compartir.</p><div class="tags"><span class="tag">12 retos</span><span class="tag">Noticias</span><span class="tag">Fuentes</span></div><a class="enter" href="modulo_4_fake_news.html">Entrar en el módulo 4 →</a></article>
 </section>
-
-  <div class="future"><strong>Próximamente:</strong> módulos 1 y 2. Ya están disponibles los módulos 3, 4, 5 y 6.</div>
-  <footer>Actividades educativas para niños y niñas de 9 a 12 años · <strong>Academia Digital PLGRPLGR</strong> se publica bajo <a href="https://creativecommons.org/licenses/by/4.0/deed.es" target="_blank" rel="license noopener noreferrer">CC BY 4.0</a>. Puedes copiarla y adaptarla indicando el origen y los cambios realizados.</footer>
+<section class="page" id="page2" aria-label="Módulos 5 a 8">
+<article class="module m5"><div class="number">Módulo 5</div><div class="icon" aria-hidden="true">🔋🛡️</div><h2>Bienestar digital</h2><p>Cuida tu descanso, tus amistades, tu energía y tu seguridad cuando estás conectado.</p><div class="tags"><span class="tag">8+ retos</span><span class="tag">Descanso</span><span class="tag">Empatía</span></div><a class="enter" href="modulo_5_bienestar_digital.html">Entrar en el módulo 5 →</a></article>
+<article class="module m6"><div class="number">Módulo 6</div><div class="icon" aria-hidden="true">⏰📵</div><h2>Controla tu tiempo digital</h2><p>Aprende a reducir distracciones y a decidir cuándo usar y cuándo dejar las pantallas.</p><div class="tags"><span class="tag">8 retos</span><span class="tag">Tiempo</span><span class="tag">FOMO</span></div><a class="enter" href="modulo_6_tiempo_digital.html">Entrar en el módulo 6 →</a></article>
+<article class="module m7 soon"><div class="number">Módulo 7</div><div class="icon" aria-hidden="true">🔐📡</div><h2>Próximamente</h2><p>Estamos preparando nuevos retos de ciudadanía digital.</p><div class="tags"><span class="tag">En preparación</span></div><span class="enter" aria-disabled="true">Muy pronto</span></article>
+<article class="module m8 soon"><div class="number">Módulo 8</div><div class="icon" aria-hidden="true">💬🌍</div><h2>Próximamente</h2><p>Más juegos para aprender a convivir y comunicarnos bien en internet.</p><div class="tags"><span class="tag">En preparación</span></div><span class="enter" aria-disabled="true">Muy pronto</span></article>
+</section>
+<div class="status"><strong>Próximamente:</strong> módulos 7 y 8. Ya están disponibles los módulos 1, 2, 3, 4, 5 y 6.</div>
+<footer>Actividades educativas para niños y niñas. <span class="license">Academia Digital PLGRPLGR · <a href="https://creativecommons.org/licenses/by/4.0/deed.es" target="_blank" rel="noopener">CC BY 4.0</a>: puedes reutilizar y adaptar indicando el origen y los cambios.</span></footer>
+<div id="pageAnnounce" class="sr-only" aria-live="polite"></div>
 </main>
+<script src="js/accessibility.js"></script>
 <script>
-document.querySelectorAll('.module .btn[href]').forEach(function(link){
-  link.addEventListener('click', function(event){
-    const destination = link.getAttribute('href');
-    if (!destination) return;
-    event.preventDefault();
-    window.location.href = destination;
-  });
-});
+const pages=[document.getElementById('page1'),document.getElementById('page2')];
+const buttons=[document.getElementById('page1Btn'),document.getElementById('page2Btn')];
+function showPage(i){pages.forEach((p,n)=>p.classList.toggle('active',n===i));buttons.forEach((b,n)=>{if(n===i)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});document.getElementById('pageAnnounce').textContent=i===0?'Mostrando módulos 1 a 4':'Mostrando módulos 5 a 8';const first=pages[i].querySelector('a.enter');if(first)first.focus();}
+buttons[0].addEventListener('click',()=>showPage(0));buttons[1].addEventListener('click',()=>showPage(1));
 </script>
-</body>
-</html>
+</body></html>

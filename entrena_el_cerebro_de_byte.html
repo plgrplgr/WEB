@@ -36,4 +36,5 @@ function answer(choice){if(locked)return;locked=true;const x=item(),right=choice
 function next(){if(phase==='train'&&i<train.length-1){i++;render();return}if(phase==='train'){phase='test';i=0;render();return}if(i<test.length-1){i++;render();return}$('result').classList.remove('hidden');$('resultText').textContent='Byte acertó '+testOk+' de '+test.length+' casos nuevos. Cuantos mejores, más variados y más equilibrados sean los ejemplos, mejor podrá aprender.';$('next').classList.add('hidden');$('phase').textContent='Misión completada'}
 function reset(){phase='train';i=0;seen=0;ok=0;dogs=0;cats=0;testOk=0;$('result').classList.add('hidden');stats();render()}
 $('dog').addEventListener('click',()=>answer('dog'));$('cat').addEventListener('click',()=>answer('cat'));$('next').addEventListener('click',next);$('reset').addEventListener('click',reset);render();stats();
-</script></body></html>
+</script><script src="js/accessibility.js"></script>
+</body></html>

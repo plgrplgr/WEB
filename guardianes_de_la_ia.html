@@ -121,5 +121,6 @@ function updateRisk(){const value=+$('risk').value;$('meterFill').style.width=va
 function finishRisk(){const value=+$('risk').value;const f=$('feedback5');f.classList.remove('hidden');if(value<=35){f.className='feedback good';f.innerHTML='<b>¡Escudo activado!</b> Has elegido compartir solo la información necesaria.';addPoints(20);setTimeout(()=>{$('mission5').classList.add('hidden');$('finalPanel').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'})},700)}else{f.className='feedback bad';f.innerHTML='<b>Reduce el nivel.</b> Para la mayoría de tareas no hace falta dar datos que te identifiquen. Mueve el control hacia la zona segura.'}}
 updateRisk();
 </script>
+<script src="js/accessibility.js"></script>
 </body>
 </html>

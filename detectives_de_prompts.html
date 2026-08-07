@@ -149,5 +149,6 @@ function bias(btn,ok){lockOptions($('mission4'));btn.classList.add(ok?'correct':
 function finalChallenge(btn,ok){lockOptions($('mission5'));btn.classList.add(ok?'correct':'wrong');const f=$('feedback5');f.className='feedback '+(ok?'good':'bad');f.innerHTML=ok?'<b>Excelente.</b> La petición separa opiniones de hechos, define criterios y pide datos comprobables.':'<b>No es una petición fiable.</b> Obliga a la IA a confirmar una opinión como si fuera un hecho.';f.classList.remove('hidden');$('finish').classList.remove('hidden');if(ok)addPoints(20)}
 function finishGame(){$('mission5').classList.add('hidden');$('finalPanel').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'})}
 </script>
+<script src="js/accessibility.js"></script>
 </body>
 </html>
