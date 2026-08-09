@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 2 · Minijuegos de Creatividad Digital</title>
+
+<!-- FontAwesome CDN para iconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* ==========================================================================
+   ESTILOS GENERALES Y TEMA CYBER-NEON (MÓDULO 2 - CREATIVIDAD DIGITAL)
+   ========================================================================== */
+:root {
+  --bg-dark: #0b0f19;
+  --bg-card: #151c2c;
+  --bg-card-light: #1e293b;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --line-color: #334155;
+  
+  --neon-cyan: #00f0ff;
+  --neon-blue: #2563eb;
+  --neon-purple: #8b5cf6;
+  --neon-pink: #ec4899;
+  --neon-green: #10b981;
+  --neon-red: #ef4444;
+  --neon-yellow: #f59e0b;
+
+  --shadow-purple: 0 0 20px rgba(139, 92, 246, 0.4);
+  --shadow-pink: 0 0 20px rgba(236, 72, 153, 0.4);
+  --shadow-green: 0 0 20px rgba(16, 185, 129, 0.4);
+}
+
+* {
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-dark);
+  background-image: 
+    radial-gradient(circle at 15% 15%, rgba(236, 72, 153, 0.08), transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(139, 92, 246, 0.08), transparent 40%);
+  color: var(--text-main);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+.app-container {
+  max-width: 1100px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 16px;
+  background: rgba(21, 28, 44, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--line-color);
+  border-radius: 999px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--neon-pink);
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 15px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(236, 72, 153, 0.1);
+  border: 1px solid rgba(236, 72, 153, 0.3);
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  background: rgba(236, 72, 153, 0.2);
+  box-shadow: var(--shadow-pink);
+  transform: translateY(-1px);
+}
+
+.brand-title {
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-title span {
+  color: var(--neon-pink);
+  text-shadow: 0 0 10px var(--neon-pink);
+}
+
+.tabs-nav {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.tab-btn {
+  flex: 1;
+  max-width: 380px;
+  padding: 14px 20px;
+  border: 2px solid var(--line-color);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-weight: 800;
+  font-size: 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.25s ease;
+}
+
+.tab-btn:hover {
+  border-color: var(--neon-pink);
+  color: #fff;
+}
+
+.tab-btn.active {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(139, 92, 246, 0.15));
+  border-color: var(--neon-pink);
+  color: #fff;
+  box-shadow: var(--shadow-pink);
+}
+
+.game-panel {
+  display: none;
+  background: var(--bg-card);
+  border: 2px solid var(--line-color);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  flex-direction: column;
+  gap: 16px;
+}
+
+.game-panel.active {
+  display: flex;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  border-bottom: 1px solid var(--line-color);
+  padding-bottom: 14px;
+}
+
+.game-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 900;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.game-stats {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.stat-badge {
+  background: var(--bg-card-light);
+  border: 1px solid var(--line-color);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stat-badge i { color: var(--neon-pink); }
+
+/* Juego 1: El Clasificador de Zoltar */
+.zoltar-card-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: var(--bg-dark);
+  border: 2px dashed var(--neon-purple);
+  border-radius: 20px;
+  padding: 30px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 30px rgba(139, 92, 246, 0.1);
+  transition: all 0.3s ease;
+}
+
+.zoltar-card-area.correct-flash {
+  border-color: var(--neon-green);
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
+}
+
+.zoltar-card-area.wrong-flash {
+  border-color: var(--neon-red);
+  box-shadow: 0 0 30px rgba(239, 68, 68, 0.4);
+}
+
+.zoltar-prompt-text {
+  font-size: 26px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+  max-width: 700px;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.zoltar-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  width: 100%;
+  max-width: 750px;
+  margin: 10px auto 0;
+}
+
+.zoltar-btn {
+  background: var(--bg-card-light);
+  border: 2px solid var(--line-color);
+  color: var(--text-main);
+  padding: 16px 12px;
+  border-radius: 16px;
+  font-size: 18px;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+}
+
+.zoltar-btn i { font-size: 28px; }
+
+.zoltar-btn.btn-personaje { border-color: rgba(0, 240, 255, 0.4); color: var(--neon-cyan); }
+.zoltar-btn.btn-personaje:hover { background: rgba(0, 240, 255, 0.15); box-shadow: var(--shadow-cyan); transform: translateY(-2px); }
+
+.zoltar-btn.btn-mundo { border-color: rgba(139, 92, 246, 0.4); color: var(--neon-purple); }
+.zoltar-btn.btn-mundo:hover { background: rgba(139, 92, 246, 0.15); box-shadow: var(--shadow-purple); transform: translateY(-2px); }
+
+.zoltar-btn.btn-trama { border-color: rgba(245, 158, 11, 0.4); color: var(--neon-yellow); }
+.zoltar-btn.btn-trama:hover { background: rgba(245, 158, 11, 0.15); box-shadow: 0 0 20px rgba(245, 158, 11, 0.4); transform: translateY(-2px); }
+
+.feedback-box {
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  border-radius: 14px;
+  font-weight: 800;
+  font-size: 17px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.feedback-box.show { opacity: 1; }
+.feedback-box.ok { background: rgba(16, 185, 129, 0.15); border: 1px solid var(--neon-green); color: var(--neon-green); }
+.feedback-box.bad { background: rgba(239, 68, 68, 0.15); border: 1px solid var(--neon-red); color: var(--neon-red); }
+
+/* Juego 2: El Cortafuegos Creativo */
+.firewall-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.puzzle-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.puzzle-item {
+  background: var(--bg-card-light);
+  border: 2px solid var(--line-color);
+  border-radius: 16px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  cursor: grab;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.puzzle-item:active { cursor: grabbing; }
+
+.puzzle-item.dragging {
+  opacity: 0.4;
+  border-color: var(--neon-pink);
+  box-shadow: var(--shadow-pink);
+}
+
+.puzzle-item.locked-success {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: var(--neon-green);
+  box-shadow: var(--shadow-green);
+}
+
+.puzzle-handle {
+  color: var(--neon-pink);
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.puzzle-number {
+  background: var(--bg-dark);
+  color: var(--neon-pink);
+  border: 1px solid var(--neon-pink);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 15px;
+}
+
+.puzzle-text {
+  flex: 1;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.4;
+}
+
+.puzzle-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.move-btn {
+  background: var(--bg-dark);
+  border: 1px solid var(--line-color);
+  color: var(--text-main);
+  border-radius: 8px;
+  width: 36px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.move-btn:hover {
+  background: var(--neon-pink);
+  color: var(--bg-dark);
+}
+
+.firewall-giant-banner {
+  display: none;
+  background: linear-gradient(135deg, #065f46, #10b981);
+  border: 4px solid var(--neon-green);
+  border-radius: 24px;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: 0 0 50px rgba(16, 185, 129, 0.6);
+  animation: pulseGlow 1.5s infinite alternate;
+  margin-top: 10px;
+}
+
+.firewall-giant-banner h1 {
+  margin: 0;
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 900;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+@keyframes pulseGlow {
+  from { box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); transform: scale(0.99); }
+  to { box-shadow: 0 0 50px rgba(16, 185, 129, 0.8); transform: scale(1.01); }
+}
+
+.action-btn {
+  background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+  color: #fff; border: none; border-radius: 14px; padding: 14px 24px;
+  font-size: 17px; font-weight: 800; cursor: pointer;
+  box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4); transition: all 0.2s ease;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;
+}
+.action-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(236, 72, 153, 0.6); }
+.action-btn.secondary { background: var(--bg-card-light); border: 1px solid var(--line-color); box-shadow: none; }
+.action-btn.secondary:hover { background: #334155; }
+.action-btn.green { background: linear-gradient(135deg, #059669, #10b981); box-shadow: var(--shadow-green); }
+
+.toast-alert {
+  position: absolute; top: 16px; left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  background: #ef4444; color: #fff; padding: 12px 20px; border-radius: 999px;
+  font-weight: 800; font-size: 15px; box-shadow: 0 8px 25px rgba(239, 68, 68, 0.5);
+  display: flex; align-items: center; gap: 10px; z-index: 120;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-align: center; max-width: 90%;
+}
+.toast-alert.show { transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 768px) {
+  .zoltar-buttons-grid { grid-template-columns: 1fr; }
+  .zoltar-prompt-text { font-size: 20px; }
+  .puzzle-item { padding: 12px; }
+  .puzzle-text { font-size: 15px; }
+  .tab-btn { font-size: 14px; padding: 10px 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  
+  <header class="topbar">
+    <a href="modulo_2_creatividad_digital.html" class="back-btn">
+      <i class="fa-solid fa-arrow-left"></i> Volver al Módulo 2
+    </a>
+    <div class="brand-title">
+      <i class="fa-solid fa-paint-brush" style="color: var(--neon-pink);"></i>
+      Módulo 2 · <span>Creatividad Digital</span>
+    </div>
+  </header>
+
+  <nav class="tabs-nav">
+    <button class="tab-btn active" id="tabGame1Btn" onclick="switchGame(1)">
+      <i class="fa-solid fa-user-astronaut"></i> 1. Clasificador de Zoltar
+    </button>
+    <button class="tab-btn" id="tabGame2Btn" onclick="switchGame(2)">
+      <i class="fa-solid fa-shield-halved"></i> 2. Cortafuegos Creativo
+    </button>
+  </nav>
+
+  <!-- ==========================================================================
+       JUEGO 1: EL CLASIFICADOR DE ZOLTAR
+       ========================================================================== -->
+  <main class="game-panel active" id="game1Panel">
+    
+    <div class="game-header">
+      <h2><i class="fa-solid fa-wand-magic-sparkles" style="color: var(--neon-purple);"></i> El Clasificador de Zoltar</h2>
+      <div class="game-stats">
+        <div class="stat-badge" title="Puntuación acumulada">
+          <i class="fa-solid fa-star" style="color: var(--neon-yellow);"></i> Puntos: <span id="zScore">0</span>
+        </div>
+        <div class="stat-badge" title="Tarjeta actual">
+          <i class="fa-solid fa-layer-group"></i> Reto: <span id="zProgress">1 / 4</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="zoltar-card-area" id="zCardArea">
+      <div style="font-size: 14px; color: var(--neon-purple); font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">
+        <i class="fa-solid fa-robot"></i> Analiza el texto y clasifícalo
+      </div>
+      <div class="zoltar-prompt-text" id="zPromptText">
+        "Relly, una joven aventurera"
+      </div>
+      
+      <div class="zoltar-buttons-grid">
+        <button class="zoltar-btn btn-personaje" onclick="classifyZoltar('Personaje')">
+          <i class="fa-solid fa-user-ninja"></i>
+          <span>Personaje</span>
+        </button>
+        <button class="zoltar-btn btn-mundo" onclick="classifyZoltar('Mundo')">
+          <i class="fa-solid fa-earth-americas"></i>
+          <span>Mundo</span>
+        </button>
+        <button class="zoltar-btn btn-trama" onclick="classifyZoltar('Trama')">
+          <i class="fa-solid fa-scroll"></i>
+          <span>Trama</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="feedback-box" id="zFeedback"></div>
+
+    <div style="display: flex; justify-content: flex-end; margin-top: auto;">
+      <button class="action-btn secondary" onclick="resetZoltar()">
+        <i class="fa-solid fa-rotate-right"></i> Reiniciar Clasificador
+      </button>
+    </div>
+
+  </main>
+
+  <!-- ==========================================================================
+       JUEGO 2: EL CORTAFUEGOS CREATIVO
+       ========================================================================== -->
+  <main class="game-panel" id="game2Panel">
+    
+    <div class="game-header">
+      <h2><i class="fa-solid fa-shield-virus" style="color: var(--neon-green);"></i> El Cortafuegos Creativo</h2>
+      <div class="game-stats">
+        <div class="stat-badge" title="Estado de la barrera">
+          <i class="fa-solid fa-lock"></i> Estado: <span id="fwStatus" style="color: var(--neon-yellow);">En prueba</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="firewall-container">
+      <p style="color: var(--text-muted); font-size: 16px; margin: 0 0 10px; text-align: center;">
+        Arrastra las tarjetas o usa las <b>flechas ▲ ▼</b> para ordenarlas del <b>1 al 4</b> y construir la historia completa:
+      </p>
+
+      <ul class="puzzle-list" id="puzzleList"></ul>
+
+      <div style="display: flex; justify-content: center; gap: 14px; margin-top: 10px;">
+        <button class="action-btn green" id="checkFirewallBtn" onclick="checkFirewallOrder()">
+          <i class="fa-solid fa-key"></i> Verificar Cortafuegos
+        </button>
+        <button class="action-btn secondary" onclick="resetFirewall()">
+          <i class="fa-solid fa-shuffle"></i> Mezclar Bloques
+        </button>
+      </div>
+
+      <div class="firewall-giant-banner" id="firewallBanner">
+        <i class="fa-solid fa-shield-cat" style="font-size: 54px; color: #fff; margin-bottom: 12px;"></i>
+        <h1>¡Estructura fijada! El cortafuegos creativo ha bloqueado al enemigo.</h1>
+      </div>
+    </div>
+
+  </main>
+
+  <div class="toast-alert" id="toast"><i class="fa-solid fa-triangle-exclamation"></i><span id="toastMsg"></span></div>
+
+</div>
+
+<script>
+function switchGame(gameNum) {
+  document.getElementById('tabGame1Btn').classList.toggle('active', gameNum === 1);
+  document.getElementById('tabGame2Btn').classList.toggle('active', gameNum === 2);
+  document.getElementById('game1Panel').classList.toggle('active', gameNum === 1);
+  document.getElementById('game2Panel').classList.toggle('active', gameNum === 2);
+}
+
+function showToastMsg(msg) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2800);
+}
+
+/* Juego 1: El Clasificador de Zoltar */
+const ZOLTAR_CARDS = [
+  { text: '"Relly, una joven aventurera"', category: 'Personaje', hint: 'Relly es la heroína principal de esta aventura.' },
+  { text: '"El reino de Zoltar, bosques eternos"', category: 'Mundo', hint: 'Los bosques del reino describen el lugar u horizonte donde ocurre todo.' },
+  { text: '"Zhara, la villana"', category: 'Personaje', hint: 'Zhara es el personaje antagonista de la historia.' },
+  { text: '"Rick descubre un amuleto mágico"', category: 'Trama', hint: 'El hallazgo del amuleto es un acontecimiento clave de la acción (trama).' }
+];
+
+let zIndex = 0;
+let zScore = 0;
+
+function renderZoltarCard() {
+  const current = ZOLTAR_CARDS[zIndex];
+  document.getElementById('zPromptText').textContent = current.text;
+  document.getElementById('zProgress').textContent = `${zIndex + 1} / ${ZOLTAR_CARDS.length}`;
+  const feedback = document.getElementById('zFeedback');
+  feedback.className = 'feedback-box';
+  feedback.textContent = '';
+  document.getElementById('zCardArea').className = 'zoltar-card-area';
+}
+
+function classifyZoltar(chosenCategory) {
+  const current = ZOLTAR_CARDS[zIndex];
+  const cardArea = document.getElementById('zCardArea');
+  const feedback = document.getElementById('zFeedback');
+
+  if (chosenCategory === current.category) {
+    zScore += 100;
+    document.getElementById('zScore').textContent = zScore;
+    cardArea.className = 'zoltar-card-area correct-flash';
+    feedback.className = 'feedback-box show ok';
+    feedback.innerHTML = `<i class="fa-solid fa-circle-check"></i> ¡Excelente! ${current.hint}`;
+  } else {
+    cardArea.className = 'zoltar-card-area wrong-flash';
+    feedback.className = 'feedback-box show bad';
+    feedback.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> Casi. La opción correcta era: <b>${current.category}</b>. ${current.hint}`;
+  }
+
+  setTimeout(() => {
+    zIndex++;
+    if (zIndex < ZOLTAR_CARDS.length) {
+      renderZoltarCard();
+    } else {
+      cardArea.className = 'zoltar-card-area correct-flash';
+      document.getElementById('zPromptText').innerHTML = `🏆 ¡Reto de Zoltar Completado!<br><span style="font-size:18px; color: var(--neon-pink);">Conseguiste ${zScore} puntos clasificando historias.</span>`;
+      feedback.className = 'feedback-box show ok';
+      feedback.innerHTML = `🌟 ¡Felicidades! Has identificado correctamente los personajes, mundos y trama.`;
+    }
+  }, 2200);
+}
+
+function resetZoltar() {
+  zIndex = 0;
+  zScore = 0;
+  document.getElementById('zScore').textContent = '0';
+  renderZoltarCard();
+}
+
+/* Juego 2: El Cortafuegos Creativo */
+const FIREWALL_TARGET_ORDER = [
+  "El mundo es un lugar futurista donde vive un héroe con gran corazón.",
+  "Un malvado villano quiere robar la conexión a internet.",
+  "El superhéroe vence su miedo para detener el plan.",
+  "El héroe derrota al villano y salva Conectópolis."
+];
+
+let firewallBlocks = [
+  "Un malvado villano quiere robar la conexión a internet.",
+  "El héroe derrota al villano y salva Conectópolis.",
+  "El mundo es un lugar futurista donde vive un héroe con gran corazón.",
+  "El superhéroe vence su miedo para detener el plan."
+];
+
+let draggedIndex = null;
+let isFirewallLocked = false;
+
+function renderFirewallPuzzle() {
+  const listEl = document.getElementById('puzzleList');
+  listEl.innerHTML = '';
+
+  firewallBlocks.forEach((text, idx) => {
+    const item = document.createElement('li');
+    item.className = 'puzzle-item' + (isFirewallLocked ? ' locked-success' : '');
+    item.draggable = !isFirewallLocked;
+
+    item.innerHTML = `
+      <div class="puzzle-handle">
+        <span class="puzzle-number">${idx + 1}</span>
+        <i class="fa-solid fa-grip-lines"></i>
+      </div>
+      <div class="puzzle-text">${text}</div>
+      <div class="puzzle-controls" style="${isFirewallLocked ? 'display:none;' : ''}">
+        <button class="move-btn" onclick="moveBlock(${idx}, -1)" ${idx === 0 ? 'disabled' : ''} title="Mover arriba">▲</button>
+        <button class="move-btn" onclick="moveBlock(${idx}, 1)" ${idx === firewallBlocks.length - 1 ? 'disabled' : ''} title="Mover abajo">▼</button>
+      </div>
+    `;
+
+    if (!isFirewallLocked) {
+      item.addEventListener('dragstart', (e) => {
+        draggedIndex = idx;
+        item.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+      });
+
+      item.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+      });
+
+      item.addEventListener('drop', (e) => {
+        e.preventDefault();
+        if (draggedIndex !== null && draggedIndex !== idx) {
+          const itemToMove = firewallBlocks.splice(draggedIndex, 1)[0];
+          firewallBlocks.splice(idx, 0, itemToMove);
+          renderFirewallPuzzle();
+        }
+      });
+
+      item.addEventListener('dragend', () => {
+        item.classList.remove('dragging');
+        draggedIndex = null;
+      });
+    }
+
+    listEl.appendChild(item);
+  });
+}
+
+function moveBlock(index, direction) {
+  if (isFirewallLocked) return;
+  const newIndex = index + direction;
+  if (newIndex >= 0 && newIndex < firewallBlocks.length) {
+    const temp = firewallBlocks[index];
+    firewallBlocks[index] = firewallBlocks[newIndex];
+    firewallBlocks[newIndex] = temp;
+    renderFirewallPuzzle();
+  }
+}
+
+function checkFirewallOrder() {
+  if (isFirewallLocked) return;
+  const isCorrect = firewallBlocks.every((val, idx) => val === FIREWALL_TARGET_ORDER[idx]);
+
+  if (isCorrect) {
+    isFirewallLocked = true;
+    renderFirewallPuzzle();
+    document.getElementById('fwStatus').textContent = '🔒 BLOQUEADO Y SEGURO';
+    document.getElementById('fwStatus').style.color = 'var(--neon-green)';
+    document.getElementById('checkFirewallBtn').disabled = true;
+    document.getElementById('firewallBanner').style.display = 'block';
+  } else {
+    showToastMsg('⚠️ El orden aún no es correcto. Revisa la secuencia de la historia.');
+  }
+}
+
+function resetFirewall() {
+  isFirewallLocked = false;
+  document.getElementById('checkFirewallBtn').disabled = false;
+  document.getElementById('firewallBanner').style.display = 'none';
+  document.getElementById('fwStatus').textContent = 'En prueba';
+  document.getElementById('fwStatus').style.color = 'var(--neon-yellow)';
+  firewallBlocks = [...FIREWALL_TARGET_ORDER].sort(() => Math.random() - 0.5);
+  renderFirewallPuzzle();
+}
+
+window.addEventListener('load', () => {
+  renderZoltarCard();
+  renderFirewallPuzzle();
+});
+</script>
+
+</body>
+</html>
