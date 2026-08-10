@@ -43,7 +43,7 @@ html, body {
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   background-color: var(--bg-dark);
   background-image: 
     radial-gradient(circle at 15% 15%, rgba(236, 72, 153, 0.08), transparent 40%),
@@ -51,6 +51,7 @@ html, body {
   color: var(--text-main);
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .app-container {
@@ -151,6 +152,7 @@ html, body {
 
 .game-panel {
   display: none;
+  position: relative;
   background: var(--bg-card);
   border: 2px solid var(--line-color);
   border-radius: 24px;
@@ -158,6 +160,7 @@ html, body {
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   flex-direction: column;
   gap: 16px;
+  min-height: 480px;
 }
 
 .game-panel.active {
@@ -448,6 +451,102 @@ html, body {
 }
 .toast-alert.show { transform: translateX(-50%) translateY(0); }
 
+/* ==========================================================================
+   ESTILOS PANTALLA DE BLOQUEO / CONTRASEÑA
+   ========================================================================== */
+.lock-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(11, 15, 25, 0.96);
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  text-align: center;
+  z-index: 150;
+  border-radius: 24px;
+}
+
+.lock-card {
+  background: var(--bg-card);
+  border: 2px solid var(--neon-pink);
+  border-radius: 22px;
+  padding: 28px 24px;
+  max-width: 440px;
+  width: 100%;
+  box-shadow: var(--shadow-pink);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  animation: popIn 0.3s ease;
+}
+
+.lock-icon {
+  width: 64px;
+  height: 64px;
+  background: rgba(236, 72, 153, 0.15);
+  border: 2px solid var(--neon-pink);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: var(--neon-pink);
+}
+
+.lock-card h3 {
+  margin: 0;
+  font-size: 22px;
+  color: #fff;
+  font-weight: 900;
+}
+
+.lock-card p {
+  margin: 0;
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.pass-input-group {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  margin-top: 6px;
+}
+
+.pass-input-group input {
+  flex: 1;
+  background: var(--bg-card-light);
+  border: 2px solid var(--line-color);
+  border-radius: 14px;
+  padding: 12px 16px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.pass-input-group input:focus {
+  border-color: var(--neon-pink);
+}
+
+.pass-error {
+  color: var(--neon-red);
+  font-weight: 800;
+  font-size: 14px;
+  min-height: 20px;
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
 @media (max-width: 768px) {
   .zoltar-buttons-grid { grid-template-columns: 1fr; }
   .zoltar-prompt-text { font-size: 20px; }
@@ -485,6 +584,20 @@ html, body {
        ========================================================================== -->
   <main class="game-panel active" id="game1Panel">
     
+    <!-- Bloqueo por contraseña para Juego 1 -->
+    <div class="lock-overlay" id="g1LockOverlay">
+      <div class="lock-card">
+        <div class="lock-icon"><i class="fa-solid fa-lock"></i></div>
+        <h3>Acceso Protegido · Juego 1</h3>
+        <p>Introduce la contraseña proporcionada por tu profesor/a para comenzar:</p>
+        <div class="pass-input-group">
+          <input type="text" id="g1PassInput" placeholder="Contraseña..." autocomplete="off" onkeypress="if(event.key==='Enter') checkPass(1)">
+          <button class="action-btn" onclick="checkPass(1)"><i class="fa-solid fa-key"></i> Entrar</button>
+        </div>
+        <div class="pass-error" id="g1PassError"></div>
+      </div>
+    </div>
+
     <div class="game-header">
       <h2><i class="fa-solid fa-wand-magic-sparkles" style="color: var(--neon-purple);"></i> El Clasificador de Zoltar</h2>
       <div class="game-stats">
@@ -536,6 +649,20 @@ html, body {
        ========================================================================== -->
   <main class="game-panel" id="game2Panel">
     
+    <!-- Bloqueo por contraseña para Juego 2 -->
+    <div class="lock-overlay" id="g2LockOverlay">
+      <div class="lock-card">
+        <div class="lock-icon"><i class="fa-solid fa-lock"></i></div>
+        <h3>Acceso Protegido · Juego 2</h3>
+        <p>Introduce la contraseña proporcionada por tu profesor/a para comenzar:</p>
+        <div class="pass-input-group">
+          <input type="text" id="g2PassInput" placeholder="Contraseña..." autocomplete="off" onkeypress="if(event.key==='Enter') checkPass(2)">
+          <button class="action-btn" onclick="checkPass(2)"><i class="fa-solid fa-key"></i> Entrar</button>
+        </div>
+        <div class="pass-error" id="g2PassError"></div>
+      </div>
+    </div>
+
     <div class="game-header">
       <h2><i class="fa-solid fa-shield-virus" style="color: var(--neon-green);"></i> El Cortafuegos Creativo</h2>
       <div class="game-stats">
@@ -574,6 +701,48 @@ html, body {
 </div>
 
 <script>
+/* ==========================================================================
+   SISTEMA DE CONTRASEÑAS POR MINIJUEGO
+   ========================================================================== */
+const PASSWORDS = {
+  1: 'salchichas voladoras',
+  2: 'tiburon electrico'
+};
+
+function normalizeStr(str) {
+  return str ? str.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') : '';
+}
+
+function checkPass(gameNum) {
+  const inputEl = document.getElementById(`g${gameNum}PassInput`);
+  const errorEl = document.getElementById(`g${gameNum}PassError`);
+  const overlayEl = document.getElementById(`g${gameNum}LockOverlay`);
+
+  const userVal = normalizeStr(inputEl.value);
+  const targetVal = normalizeStr(PASSWORDS[gameNum]);
+
+  if (userVal === targetVal) {
+    overlayEl.style.display = 'none';
+    sessionStorage.setItem(`m2_g${gameNum}_unlocked`, 'true');
+  } else {
+    errorEl.textContent = '🔒 Contraseña incorrecta. Pídesela a tu profesor/a.';
+    inputEl.style.borderColor = 'var(--neon-red)';
+    setTimeout(() => {
+      inputEl.style.borderColor = 'var(--line-color)';
+    }, 1500);
+  }
+}
+
+// Comprobar si ya fueron desbloqueados en la sesión actual
+window.addEventListener('load', () => {
+  if (sessionStorage.getItem('m2_g1_unlocked') === 'true') {
+    document.getElementById('g1LockOverlay').style.display = 'none';
+  }
+  if (sessionStorage.getItem('m2_g2_unlocked') === 'true') {
+    document.getElementById('g2LockOverlay').style.display = 'none';
+  }
+});
+
 function switchGame(gameNum) {
   document.getElementById('tabGame1Btn').classList.toggle('active', gameNum === 1);
   document.getElementById('tabGame2Btn').classList.toggle('active', gameNum === 2);
@@ -599,163 +768,166 @@ const ZOLTAR_CARDS = [
 let zIndex = 0;
 let zScore = 0;
 
-function renderZoltarCard() {
-  const current = ZOLTAR_CARDS[zIndex];
-  document.getElementById('zPromptText').textContent = current.text;
+function renderZoltar() {
+  if (zIndex >= ZOLTAR_CARDS.length) {
+    document.getElementById('zPromptText').innerHTML = '🎉 ¡Excelente! Has clasificado todas las tarjetas del reino.';
+    document.querySelector('.zoltar-buttons-grid').style.display = 'none';
+    const fb = document.getElementById('zFeedback');
+    fb.className = 'feedback-box show ok';
+    fb.textContent = `Puntuación final: ${zScore} puntos. ¡Conoces a la perfección las partes de una historia!`;
+    return;
+  }
+  document.querySelector('.zoltar-buttons-grid').style.display = 'grid';
+  const card = ZOLTAR_CARDS[zIndex];
+  document.getElementById('zPromptText').textContent = card.text;
   document.getElementById('zProgress').textContent = `${zIndex + 1} / ${ZOLTAR_CARDS.length}`;
-  const feedback = document.getElementById('zFeedback');
-  feedback.className = 'feedback-box';
-  feedback.textContent = '';
-  document.getElementById('zCardArea').className = 'zoltar-card-area';
 }
 
-function classifyZoltar(chosenCategory) {
-  const current = ZOLTAR_CARDS[zIndex];
-  const cardArea = document.getElementById('zCardArea');
-  const feedback = document.getElementById('zFeedback');
+function classifyZoltar(choice) {
+  const card = ZOLTAR_CARDS[zIndex];
+  const area = document.getElementById('zCardArea');
+  const fb = document.getElementById('zFeedback');
 
-  if (chosenCategory === current.category) {
+  if (choice === card.category) {
     zScore += 100;
     document.getElementById('zScore').textContent = zScore;
-    cardArea.className = 'zoltar-card-area correct-flash';
-    feedback.className = 'feedback-box show ok';
-    feedback.innerHTML = `<i class="fa-solid fa-circle-check"></i> ¡Excelente! ${current.hint}`;
-  } else {
-    cardArea.className = 'zoltar-card-area wrong-flash';
-    feedback.className = 'feedback-box show bad';
-    feedback.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> Casi. La opción correcta era: <b>${current.category}</b>. ${current.hint}`;
-  }
-
-  setTimeout(() => {
+    area.classList.add('correct-flash');
+    fb.className = 'feedback-box show ok';
+    fb.textContent = `¡Correcto! ${card.hint}`;
+    setTimeout(() => area.classList.remove('correct-flash'), 600);
     zIndex++;
-    if (zIndex < ZOLTAR_CARDS.length) {
-      renderZoltarCard();
-    } else {
-      cardArea.className = 'zoltar-card-area correct-flash';
-      document.getElementById('zPromptText').innerHTML = `🏆 ¡Reto de Zoltar Completado!<br><span style="font-size:18px; color: var(--neon-pink);">Conseguiste ${zScore} puntos clasificando historias.</span>`;
-      feedback.className = 'feedback-box show ok';
-      feedback.innerHTML = `🌟 ¡Felicidades! Has identificado correctamente los personajes, mundos y trama.`;
-    }
-  }, 2200);
+    setTimeout(() => { renderZoltar(); }, 1200);
+  } else {
+    area.classList.add('wrong-flash');
+    fb.className = 'feedback-box show bad';
+    fb.textContent = `Casi. Piensa bien qué parte representa ese elemento de la historia.`;
+    setTimeout(() => area.classList.remove('wrong-flash'), 600);
+  }
 }
 
 function resetZoltar() {
   zIndex = 0;
   zScore = 0;
   document.getElementById('zScore').textContent = '0';
-  renderZoltarCard();
+  document.getElementById('zFeedback').className = 'feedback-box';
+  document.getElementById('zFeedback').textContent = '';
+  renderZoltar();
 }
 
+
 /* Juego 2: El Cortafuegos Creativo */
-const FIREWALL_TARGET_ORDER = [
-  "El mundo es un lugar futurista donde vive un héroe con gran corazón.",
-  "Un malvado villano quiere robar la conexión a internet.",
-  "El superhéroe vence su miedo para detener el plan.",
-  "El héroe derrota al villano y salva Conectópolis."
+const FIREWALL_CORRECT_STEPS = [
+  "1. Personaje: Rick, un joven aventurero",
+  "2. Mundo: El reino de Zoltar",
+  "3. Problema: Descubre un amuleto que debe proteger",
+  "4. Desenlace: Vence a la villana y salva su aldea"
 ];
 
-let firewallBlocks = [
-  "Un malvado villano quiere robar la conexión a internet.",
-  "El héroe derrota al villano y salva Conectópolis.",
-  "El mundo es un lugar futurista donde vive un héroe con gran corazón.",
-  "El superhéroe vence su miedo para detener el plan."
+let firewallItems = [
+  "4. Desenlace: Vence a la villana y salva su aldea",
+  "2. Mundo: El reino de Zoltar",
+  "1. Personaje: Rick, un joven aventurero",
+  "3. Problema: Descubre un amuleto que debe proteger"
 ];
 
 let draggedIndex = null;
-let isFirewallLocked = false;
 
-function renderFirewallPuzzle() {
-  const listEl = document.getElementById('puzzleList');
-  listEl.innerHTML = '';
+function renderFirewall() {
+  const list = document.getElementById('puzzleList');
+  list.innerHTML = '';
+  document.getElementById('firewallBanner').style.display = 'none';
+  document.getElementById('fwStatus').textContent = 'En prueba';
+  document.getElementById('fwStatus').style.color = 'var(--neon-yellow)';
+  document.getElementById('checkFirewallBtn').disabled = false;
 
-  firewallBlocks.forEach((text, idx) => {
-    const item = document.createElement('li');
-    item.className = 'puzzle-item' + (isFirewallLocked ? ' locked-success' : '');
-    item.draggable = !isFirewallLocked;
+  firewallItems.forEach((itemText, idx) => {
+    const li = document.createElement('li');
+    li.className = 'puzzle-item';
+    li.draggable = true;
+    li.dataset.index = idx;
 
-    item.innerHTML = `
+    li.innerHTML = `
       <div class="puzzle-handle">
-        <span class="puzzle-number">${idx + 1}</span>
-        <i class="fa-solid fa-grip-lines"></i>
+        <i class="fa-solid fa-grip-vertical"></i>
+        <div class="puzzle-number">${idx + 1}</div>
       </div>
-      <div class="puzzle-text">${text}</div>
-      <div class="puzzle-controls" style="${isFirewallLocked ? 'display:none;' : ''}">
-        <button class="move-btn" onclick="moveBlock(${idx}, -1)" ${idx === 0 ? 'disabled' : ''} title="Mover arriba">▲</button>
-        <button class="move-btn" onclick="moveBlock(${idx}, 1)" ${idx === firewallBlocks.length - 1 ? 'disabled' : ''} title="Mover abajo">▼</button>
+      <div class="puzzle-text">${itemText}</div>
+      <div class="puzzle-controls">
+        <button class="move-btn" onclick="moveItem(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}><i class="fa-solid fa-chevron-up"></i></button>
+        <button class="move-btn" onclick="moveItem(${idx}, 1)" ${idx === firewallItems.length - 1 ? 'disabled' : ''}><i class="fa-solid fa-chevron-down"></i></button>
       </div>
     `;
 
-    if (!isFirewallLocked) {
-      item.addEventListener('dragstart', (e) => {
-        draggedIndex = idx;
-        item.classList.add('dragging');
-        e.dataTransfer.effectAllowed = 'move';
-      });
+    li.addEventListener('dragstart', (e) => {
+      draggedIndex = idx;
+      li.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
 
-      item.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
-      });
+    li.addEventListener('dragend', () => {
+      li.classList.remove('dragging');
+    });
 
-      item.addEventListener('drop', (e) => {
-        e.preventDefault();
-        if (draggedIndex !== null && draggedIndex !== idx) {
-          const itemToMove = firewallBlocks.splice(draggedIndex, 1)[0];
-          firewallBlocks.splice(idx, 0, itemToMove);
-          renderFirewallPuzzle();
-        }
-      });
+    li.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+    });
 
-      item.addEventListener('dragend', () => {
-        item.classList.remove('dragging');
-        draggedIndex = null;
-      });
-    }
+    li.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const targetIndex = parseInt(li.dataset.index);
+      if (draggedIndex !== null && draggedIndex !== targetIndex) {
+        const item = firewallItems.splice(draggedIndex, 1)[0];
+        firewallItems.splice(targetIndex, 0, item);
+        renderFirewall();
+      }
+    });
 
-    listEl.appendChild(item);
+    list.appendChild(li);
   });
 }
 
-function moveBlock(index, direction) {
-  if (isFirewallLocked) return;
+function moveItem(index, direction) {
   const newIndex = index + direction;
-  if (newIndex >= 0 && newIndex < firewallBlocks.length) {
-    const temp = firewallBlocks[index];
-    firewallBlocks[index] = firewallBlocks[newIndex];
-    firewallBlocks[newIndex] = temp;
-    renderFirewallPuzzle();
-  }
+  if (newIndex < 0 || newIndex >= firewallItems.length) return;
+  const temp = firewallItems[index];
+  firewallItems[index] = firewallItems[newIndex];
+  firewallItems[newIndex] = temp;
+  renderFirewall();
 }
 
 function checkFirewallOrder() {
-  if (isFirewallLocked) return;
-  const isCorrect = firewallBlocks.every((val, idx) => val === FIREWALL_TARGET_ORDER[idx]);
+  let isCorrect = true;
+  for (let i = 0; i < firewallItems.length; i++) {
+    if (firewallItems[i] !== FIREWALL_CORRECT_STEPS[i]) {
+      isCorrect = false; break;
+    }
+  }
 
   if (isCorrect) {
-    isFirewallLocked = true;
-    renderFirewallPuzzle();
-    document.getElementById('fwStatus').textContent = '🔒 BLOQUEADO Y SEGURO';
+    document.getElementById('fwStatus').textContent = '¡Bloqueado & Seguro!';
     document.getElementById('fwStatus').style.color = 'var(--neon-green)';
-    document.getElementById('checkFirewallBtn').disabled = true;
     document.getElementById('firewallBanner').style.display = 'block';
+    document.querySelectorAll('.puzzle-item').forEach(el => el.classList.add('locked-success'));
+    showToastMsg('🛡️ ¡Cortafuegos activado con éxito! Has ordenado el mapa narrativo.');
   } else {
-    showToastMsg('⚠️ El orden aún no es correcto. Revisa la secuencia de la historia.');
+    showToastMsg('⚠️ El orden no es correcto todavía. Revisa la secuencia (Personaje ➔ Mundo ➔ Problema ➔ Desenlace).');
   }
 }
 
 function resetFirewall() {
-  isFirewallLocked = false;
-  document.getElementById('checkFirewallBtn').disabled = false;
-  document.getElementById('firewallBanner').style.display = 'none';
-  document.getElementById('fwStatus').textContent = 'En prueba';
-  document.getElementById('fwStatus').style.color = 'var(--neon-yellow)';
-  firewallBlocks = [...FIREWALL_TARGET_ORDER].sort(() => Math.random() - 0.5);
-  renderFirewallPuzzle();
+  firewallItems = [
+    "3. Problema: Descubre un amuleto que debe proteger",
+    "1. Personaje: Rick, un joven aventurero",
+    "4. Desenlace: Vence a la villana y salva su aldea",
+    "2. Mundo: El reino de Zoltar"
+  ];
+  renderFirewall();
 }
 
 window.addEventListener('load', () => {
-  renderZoltarCard();
-  renderFirewallPuzzle();
+  renderZoltar();
+  renderFirewall();
 });
 </script>
 

@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 4 · Minijuegos de Detectives Fake News</title>
+
+<!-- FontAwesome CDN para iconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* ==========================================================================
+   ESTILOS GENERALES Y TEMA CYBER-NEON (MÓDULO 4 - FAKE NEWS DETECTIVES)
+   ========================================================================== */
+:root {
+  --bg-dark: #0b0f19;
+  --bg-card: #151c2c;
+  --bg-card-light: #1e293b;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --line-color: #334155;
+  
+  --neon-cyan: #00f0ff;
+  --neon-blue: #2563eb;
+  --neon-purple: #8b5cf6;
+  --neon-pink: #ec4899;
+  --neon-green: #10b981;
+  --neon-red: #ef4444;
+  --neon-yellow: #f59e0b;
+  --neon-orange: #f97316;
+
+  --shadow-green: 0 0 20px rgba(16, 185, 129, 0.4);
+  --shadow-red: 0 0 20px rgba(239, 68, 68, 0.4);
+  --shadow-cyan: 0 0 20px rgba(0, 240, 255, 0.4);
+}
+
+* {
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+  background-color: var(--bg-dark);
+  background-image: 
+    radial-gradient(circle at 15% 15%, rgba(239, 68, 68, 0.1), transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.1), transparent 40%);
+  color: var(--text-main);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.app-container {
+  max-width: 1100px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 16px;
+  background: rgba(21, 28, 44, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--line-color);
+  border-radius: 999px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--neon-red);
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 15px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  box-shadow: var(--shadow-red);
+  transform: translateY(-1px);
+}
+
+.brand-title {
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-title span {
+  color: var(--neon-red);
+  text-shadow: 0 0 10px var(--neon-red);
+}
+
+.tabs-nav {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.tab-btn {
+  flex: 1;
+  max-width: 380px;
+  padding: 14px 20px;
+  border: 2px solid var(--line-color);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-weight: 800;
+  font-size: 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.25s ease;
+}
+
+.tab-btn:hover {
+  border-color: var(--neon-red);
+  color: #fff;
+}
+
+.tab-btn.active {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(16, 185, 129, 0.2));
+  border-color: var(--neon-red);
+  color: #fff;
+  box-shadow: var(--shadow-red);
+}
+
+.game-panel {
+  display: none;
+  position: relative;
+  background: var(--bg-card);
+  border: 2px solid var(--line-color);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  flex-direction: column;
+  gap: 16px;
+}
+
+.game-panel.active {
+  display: flex;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  border-bottom: 1px solid var(--line-color);
+  padding-bottom: 14px;
+}
+
+.game-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 900;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.game-stats {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.stat-badge {
+  background: var(--bg-card-light);
+  border: 1px solid var(--line-color);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stat-badge i { color: var(--neon-green); }
+.stat-badge.lives i { color: var(--neon-red); }
+.stat-badge.height i { color: var(--neon-cyan); }
+
+.game-viewport {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #070a12;
+  border-radius: 20px;
+  border: 2px solid var(--line-color);
+  overflow: hidden;
+  min-height: 480px;
+}
+
+canvas {
+  display: block;
+  max-width: 100%;
+  max-height: 460px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.dpad-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding-top: 10px;
+}
+
+.dpad-btn {
+  flex: 1;
+  max-width: 150px;
+  height: 54px;
+  background: var(--bg-card-light);
+  border: 2px solid var(--neon-green);
+  color: #fff;
+  border-radius: 16px;
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.dpad-btn:active {
+  background: var(--neon-green);
+  color: var(--bg-dark);
+}
+
+.modal-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(11, 15, 25, 0.94);
+  backdrop-filter: blur(6px);
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  padding: 24px; text-align: center; z-index: 100; border-radius: 20px;
+}
+
+.modal-card {
+  background: var(--bg-card);
+  border: 2px solid var(--neon-green);
+  border-radius: 20px;
+  padding: 24px;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: var(--shadow-green);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: popIn 0.3s ease;
+}
+
+.modal-card.warning { border-color: var(--neon-red); box-shadow: var(--shadow-red); }
+
+.modal-card h3 { margin: 0; font-size: 24px; color: #fff; }
+.modal-card p { margin: 0; font-size: 15px; color: var(--text-muted); line-height: 1.5; }
+
+.action-btn {
+  background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+  color: #0b0f19; border: none; border-radius: 14px; padding: 14px 24px;
+  font-size: 17px; font-weight: 900; cursor: pointer;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); transition: all 0.2s ease;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;
+}
+.action-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6); }
+
+.toast-alert {
+  position: absolute; top: 16px; left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  background: #ef4444; color: #fff; padding: 12px 20px; border-radius: 999px;
+  font-weight: 800; font-size: 15px; box-shadow: 0 8px 25px rgba(239, 68, 68, 0.5);
+  display: flex; align-items: center; gap: 10px; z-index: 120;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-align: center; max-width: 90%;
+}
+.toast-alert.show { transform: translateX(-50%) translateY(0); }
+.toast-alert.ok { background: #10b981; box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5); }
+
+/* ==========================================================================
+   JUEGO 2: EL SELLO DEL DETECTIVE (EXPEDIENTES Y SELLOS DRAG & DROP)
+   ========================================================================== */
+.detective-workbench {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 850px;
+  margin: 10px auto;
+  flex-wrap: wrap;
+}
+
+.stamp-zone {
+  flex: 1;
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.stamp-btn {
+  width: 140px;
+  height: 100px;
+  border-radius: 20px;
+  border: 3px dashed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-weight: 900;
+  font-size: 18px;
+  cursor: grab;
+  transition: all 0.25s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.stamp-btn:active { cursor: grabbing; transform: scale(0.96); }
+
+.stamp-btn.reliable {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: var(--neon-green);
+  color: var(--neon-green);
+}
+.stamp-btn.reliable:hover {
+  background: rgba(16, 185, 129, 0.25);
+  box-shadow: var(--shadow-green);
+  transform: translateY(-3px);
+}
+
+.stamp-btn.fake {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: var(--neon-red);
+  color: var(--neon-red);
+}
+.stamp-btn.fake:hover {
+  background: rgba(239, 68, 68, 0.25);
+  box-shadow: var(--shadow-red);
+  transform: translateY(-3px);
+}
+
+.case-file-card {
+  flex: 2;
+  min-width: 320px;
+  background: #0f172a;
+  border: 3px solid var(--neon-cyan);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: var(--shadow-cyan);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.case-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dashed var(--line-color);
+  padding-bottom: 10px;
+  color: var(--neon-cyan);
+  font-weight: 900;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.case-title {
+  font-size: 20px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.35;
+}
+
+.case-field {
+  background: var(--bg-card-light);
+  border: 1px solid var(--line-color);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.case-field span { font-weight: 800; color: var(--text-muted); min-width: 70px; }
+.case-field strong { color: #fff; }
+
+.stamped-mark {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-12deg) scale(0);
+  font-size: 42px;
+  font-weight: 900;
+  padding: 12px 24px;
+  border: 6px solid;
+  border-radius: 18px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.stamped-mark.show-reliable {
+  opacity: 0.95;
+  transform: translate(-50%, -50%) rotate(-12deg) scale(1);
+  color: var(--neon-green);
+  border-color: var(--neon-green);
+  box-shadow: var(--shadow-green);
+}
+
+.stamped-mark.show-fake {
+  opacity: 0.95;
+  transform: translate(-50%, -50%) rotate(-12deg) scale(1);
+  color: var(--neon-red);
+  border-color: var(--neon-red);
+  box-shadow: var(--shadow-red);
+}
+
+/* ==========================================================================
+   ESTILOS PANTALLA DE BLOQUEO / CONTRASEÑA
+   ========================================================================== */
+.lock-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(11, 15, 25, 0.96);
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  text-align: center;
+  z-index: 150;
+  border-radius: 24px;
+}
+
+.lock-card {
+  background: var(--bg-card);
+  border: 2px solid var(--neon-green);
+  border-radius: 22px;
+  padding: 28px 24px;
+  max-width: 440px;
+  width: 100%;
+  box-shadow: var(--shadow-green);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  animation: popIn 0.3s ease;
+}
+
+.lock-icon {
+  width: 64px;
+  height: 64px;
+  background: rgba(16, 185, 129, 0.15);
+  border: 2px solid var(--neon-green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: var(--neon-green);
+}
+
+.lock-card h3 {
+  margin: 0;
+  font-size: 22px;
+  color: #fff;
+  font-weight: 900;
+}
+
+.lock-card p {
+  margin: 0;
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.pass-input-group {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  margin-top: 6px;
+}
+
+.pass-input-group input {
+  flex: 1;
+  background: var(--bg-card-light);
+  border: 2px solid var(--line-color);
+  border-radius: 14px;
+  padding: 12px 16px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.pass-input-group input:focus {
+  border-color: var(--neon-green);
+}
+
+.pass-error {
+  color: var(--neon-red);
+  font-weight: 800;
+  font-size: 14px;
+  min-height: 20px;
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 768px) {
+  .topbar { border-radius: 16px; }
+  .brand-title { font-size: 15px; }
+  .tab-btn { font-size: 14px; padding: 10px 12px; }
+  .game-panel { padding: 14px; }
+  .detective-workbench { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  
+  <header class="topbar">
+    <a href="modulo_4_fake_news.html" class="back-btn">
+      <i class="fa-solid fa-arrow-left"></i> Volver al Módulo 4
+    </a>
+    <div class="brand-title">
+      <i class="fa-solid fa-user-secret" style="color: var(--neon-red);"></i>
+      Módulo 4 · <span>Detectives Fake News</span>
+    </div>
+  </header>
+
+  <nav class="tabs-nav">
+    <button class="tab-btn active" id="tabGame1Btn" onclick="switchGame(1)">
+      <i class="fa-solid fa-person-arrow-up-from-line"></i> 1. El Salto a la Verdad
+    </button>
+    <button class="tab-btn" id="tabGame2Btn" onclick="switchGame(2)">
+      <i class="fa-solid fa-stamp"></i> 2. El Sello del Detective
+    </button>
+  </nav>
+
+  <!-- ==========================================================================
+       JUEGO 1: EL SALTO A LA VERDAD (DOODLE JUMP VERIFICADOR)
+       ========================================================================== -->
+  <main class="game-panel active" id="game1Panel">
+    
+    <!-- Bloqueo por contraseña para Juego 1 -->
+    <div class="lock-overlay" id="g1LockOverlay">
+      <div class="lock-card">
+        <div class="lock-icon"><i class="fa-solid fa-lock"></i></div>
+        <h3>Acceso Protegido · Juego 1</h3>
+        <p>Introduce la contraseña proporcionada por tu profesor/a para comenzar:</p>
+        <div class="pass-input-group">
+          <input type="text" id="g1PassInput" placeholder="Contraseña..." autocomplete="off" onkeypress="if(event.key==='Enter') checkPass(1)">
+          <button class="action-btn" onclick="checkPass(1)"><i class="fa-solid fa-key"></i> Entrar</button>
+        </div>
+        <div class="pass-error" id="g1PassError"></div>
+      </div>
+    </div>
+
+    <div class="game-header">
+      <h2><i class="fa-solid fa-person-arrow-up-from-line" style="color: var(--neon-green);"></i> El Salto a la Verdad</h2>
+      <div class="game-stats">
+        <div class="stat-badge height" title="Altura alcanzada">
+          <i class="fa-solid fa-up-long"></i> Altura: <span id="g1Score">0</span>m
+        </div>
+        <div class="stat-badge lives" title="Vidas restantes">
+          <i class="fa-solid fa-heart"></i> <span id="g1Lives">3</span> / 3
+        </div>
+      </div>
+    </div>
+
+    <div class="game-viewport" id="g1Viewport">
+      <canvas id="jumperCanvas" width="600" height="460"></canvas>
+      <div class="toast-alert" id="g1Toast"><i class="fa-solid fa-triangle-exclamation"></i><span id="g1ToastMsg"></span></div>
+      
+      <div class="modal-overlay" id="g1Modal">
+        <div class="modal-card" id="g1ModalCard">
+          <i class="fa-solid fa-shoe-prints" style="font-size: 50px; color: var(--neon-green);"></i>
+          <h3 id="g1ModalTitle">El Salto a la Verdad</h3>
+          <p id="g1ModalDesc">
+            Escala la red rebotando en plataformas seguras para alcanzar la cima:<br><br>
+            🟢 <b>Plataformas Confiables (.edu, .gov, Autor Real):</b> ¡Sólidas! Rebotas seguro.<br>
+            🔴 <b>Plataformas Fake News (.biz, Sin Autor, Broma):</b> ¡Falsas! Se rompen al pisarlas y caerás.<br><br>
+            <b>Controles:</b> Mueve al agente con Flechas ⬅️ ➡️ o la botonera táctil.
+          </p>
+          <button class="action-btn" id="g1StartBtn" onclick="initGame1()"><i class="fa-solid fa-play"></i> Comenzar Salto</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="dpad-container">
+      <button class="dpad-btn" id="g1LeftBtn"><i class="fa-solid fa-arrow-left"></i> Izquierda</button>
+      <button class="dpad-btn" id="g1RightBtn"><i class="fa-solid fa-arrow-right"></i> Derecha</button>
+    </div>
+  </main>
+
+  <!-- ==========================================================================
+       JUEGO 2: EL SELLO DEL DETECTIVE
+       ========================================================================== -->
+  <main class="game-panel" id="game2Panel">
+    
+    <!-- Bloqueo por contraseña para Juego 2 -->
+    <div class="lock-overlay" id="g2LockOverlay">
+      <div class="lock-card">
+        <div class="lock-icon"><i class="fa-solid fa-lock"></i></div>
+        <h3>Acceso Protegido · Juego 2</h3>
+        <p>Introduce la contraseña proporcionada por tu profesor/a para comenzar:</p>
+        <div class="pass-input-group">
+          <input type="text" id="g2PassInput" placeholder="Contraseña..." autocomplete="off" onkeypress="if(event.key==='Enter') checkPass(2)">
+          <button class="action-btn" onclick="checkPass(2)"><i class="fa-solid fa-key"></i> Entrar</button>
+        </div>
+        <div class="pass-error" id="g2PassError"></div>
+      </div>
+    </div>
+
+    <div class="game-header">
+      <h2><i class="fa-solid fa-stamp" style="color: var(--neon-cyan);"></i> El Sello del Detective</h2>
+      <div class="game-stats">
+        <div class="stat-badge" title="Expediente actual">
+          <i class="fa-solid fa-folder-open"></i> Expediente: <span id="g2Progress">1 / 5</span>
+        </div>
+        <div class="stat-badge" title="Aciertos acumulados">
+          <i class="fa-solid fa-star" style="color: var(--neon-yellow);"></i> Puntos: <span id="g2Score">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="detective-workbench">
+      
+      <!-- Sello Confiable -->
+      <div class="stamp-zone">
+        <button class="stamp-btn reliable" id="stampReliableBtn" draggable="true" onclick="stampCase(true)">
+          <i class="fa-solid fa-shield-check" style="font-size: 28px;"></i>
+          CONFIABLE
+        </button>
+        <span style="font-size: 13px; color: var(--text-muted); font-weight: 700;">Haz clic o arrastra</span>
+      </div>
+
+      <!-- Expediente central -->
+      <div class="case-file-card" id="caseFileCard" ondragover="allowDropCase(event)" ondrop="dropStampCase(event)">
+        <div class="case-header">
+          <span><i class="fa-solid fa-file-shield"></i> Expediente N° <span id="cNumber">01</span></span>
+          <span style="color: var(--neon-yellow);"><i class="fa-solid fa-magnifying-glass"></i> En investigación</span>
+        </div>
+
+        <div class="case-title" id="cTitle">"Base secreta en la Luna controla todos los teléfonos del planeta"</div>
+
+        <div class="case-field">
+          <span>👤 Autor:</span>
+          <strong id="cAuthor">Anonimo123 / Sin identificar</strong>
+        </div>
+
+        <div class="case-field">
+          <span>🌐 Dominio:</span>
+          <strong id="cDomain">alertas-raras-24.biz</strong>
+        </div>
+
+        <div class="stamped-mark" id="stampedMark">CONFIABLE</div>
+      </div>
+
+      <!-- Sello Fake -->
+      <div class="stamp-zone">
+        <button class="stamp-btn fake" id="stampFakeBtn" draggable="true" onclick="stampCase(false)">
+          <i class="fa-solid fa-triangle-exclamation" style="font-size: 28px;"></i>
+          FAKE
+        </button>
+        <span style="font-size: 13px; color: var(--text-muted); font-weight: 700;">Haz clic o arrastra</span>
+      </div>
+
+    </div>
+
+    <div class="toast-alert" id="g2Toast"><i class="fa-solid fa-circle-exclamation"></i><span id="g2ToastMsg"></span></div>
+    
+    <div class="modal-overlay" id="g2Modal" style="display:none;">
+      <div class="modal-card" id="g2ModalCard">
+        <i class="fa-solid fa-award" style="font-size: 52px; color: var(--neon-cyan);"></i>
+        <h3 id="g2ModalTitle">¡Investigación Completada!</h3>
+        <p id="g2ModalDesc">Has verificado los 5 expedientes periodísticos.</p>
+        <button class="action-btn" onclick="initGame2()"><i class="fa-solid fa-rotate-right"></i> Investigar Nuevos Casos</button>
+      </div>
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+/* ==========================================================================
+   SISTEMA DE CONTRASEÑAS POR MINIJUEGO
+   ========================================================================== */
+const PASSWORDS = {
+  1: 'salchichas voladoras',
+  2: 'tiburon electrico'
+};
+
+function normalizeStr(str) {
+  return str ? str.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') : '';
+}
+
+function checkPass(gameNum) {
+  const inputEl = document.getElementById(`g${gameNum}PassInput`);
+  const errorEl = document.getElementById(`g${gameNum}PassError`);
+  const overlayEl = document.getElementById(`g${gameNum}LockOverlay`);
+
+  const userVal = normalizeStr(inputEl.value);
+  const targetVal = normalizeStr(PASSWORDS[gameNum]);
+
+  if (userVal === targetVal) {
+    overlayEl.style.display = 'none';
+    sessionStorage.setItem(`m4_g${gameNum}_unlocked`, 'true');
+  } else {
+    errorEl.textContent = '🔒 Contraseña incorrecta. Pídesela a tu profesor/a.';
+    inputEl.style.borderColor = 'var(--neon-red)';
+    setTimeout(() => { inputEl.style.borderColor = 'var(--line-color)'; }, 1500);
+  }
+}
+
+window.addEventListener('load', () => {
+  if (sessionStorage.getItem('m4_g1_unlocked') === 'true') {
+    document.getElementById('g1LockOverlay').style.display = 'none';
+  }
+  if (sessionStorage.getItem('m4_g2_unlocked') === 'true') {
+    document.getElementById('g2LockOverlay').style.display = 'none';
+  }
+});
+
+/* ==========================================================================
+   NAVEGACIÓN ENTRE PESTAÑAS
+   ========================================================================== */
+function switchGame(gameNum) {
+  document.getElementById('tabGame1Btn').classList.toggle('active', gameNum === 1);
+  document.getElementById('tabGame2Btn').classList.toggle('active', gameNum === 2);
+  document.getElementById('game1Panel').classList.toggle('active', gameNum === 1);
+  document.getElementById('game2Panel').classList.toggle('active', gameNum === 2);
+
+  if (gameNum === 1) {
+    drawJumperStatic();
+  } else {
+    g1Running = false;
+  }
+}
+
+function showToast(game, msg, isOk = false) {
+  const toast = document.getElementById(game === 1 ? 'g1Toast' : 'g2Toast');
+  const toastMsg = document.getElementById(game === 1 ? 'g1ToastMsg' : 'g2ToastMsg');
+  toastMsg.textContent = msg;
+  toast.className = 'toast-alert show' + (isOk ? ' ok' : '');
+  setTimeout(() => { toast.classList.remove('show'); }, 2000);
+}
+
+
+/* ==========================================================================
+   JUEGO 1: EL SALTO A LA VERDAD (DOODLE JUMP GAME ENGINE REFORMADO)
+   ========================================================================== */
+const canvas1 = document.getElementById('jumperCanvas');
+const ctx1 = canvas1.getContext('2d');
+
+let g1Score = 0;
+let g1Lives = 3;
+let g1Running = false;
+let g1AnimFrame = null;
+let g1Invincible = 0;
+
+let player = {
+  x: 280,
+  y: 350,
+  width: 34,
+  height: 38,
+  vx: 0,
+  vy: 0,
+  speed: 5.8,           // Control horizontal ágil
+  jumpStrength: -10.5, // Salto alto y cómodo
+  gravity: 0.28        // Caída lenta y fluida para niños
+};
+
+let g1LeftPressed = false;
+let g1RightPressed = false;
+let platforms = [];
+let consecutiveFakes = 0;
+
+const RELIABLE_TEXTS = ['.edu', '.gov', '.org', 'Autor Real', 'Web Oficial', 'Estudio Serio'];
+const FAKE_TEXTS = ['.biz', 'Sin autor', 'Clickbait', 'Noticia Falsa', 'Rumor Viral', 'Broma'];
+
+function initGame1() {
+  g1Score = 0;
+  g1Lives = 3;
+  g1Invincible = 0;
+  consecutiveFakes = 0;
+
+  player.x = canvas1.width / 2 - 17;
+  player.y = 280;
+  player.vx = 0;
+  player.vy = player.jumpStrength;
+
+  document.getElementById('g1Score').textContent = '0';
+  document.getElementById('g1Lives').textContent = '3';
+  document.getElementById('g1Modal').style.display = 'none';
+
+  // Generar plataformas iniciales con espacio reducido (45px entre niveles)
+  platforms = [];
+  // Plataforma base inicial siempre sólida y segura
+  platforms.push({ x: canvas1.width / 2 - 70, y: 400, width: 140, height: 18, isFake: false, text: '🟢 .gov (Base)' });
+
+  for (let i = 0; i < 8; i++) {
+    spawnPlatform(340 - i * 45);
+  }
+
+  g1Running = true;
+  if (g1AnimFrame) cancelAnimationFrame(g1AnimFrame);
+  game1Loop();
+}
+
+function spawnPlatform(yPos) {
+  // Garantizar que NO haya demasiadas trampas seguidas para que NUNCA sea imposible avanzar
+  let isFake = false;
+  if (consecutiveFakes >= 1) {
+    isFake = false; // Forzar plataforma confiable si la anterior fue fake
+    consecutiveFakes = 0;
+  } else {
+    isFake = Math.random() < 0.25; // Solo 25% de probabilidad de fake
+    if (isFake) consecutiveFakes++;
+  }
+
+  const textArray = isFake ? FAKE_TEXTS : RELIABLE_TEXTS;
+  const text = textArray[Math.floor(Math.random() * textArray.length)];
+  const width = 125; // Plataformas más anchas y fáciles de atinar
+  const x = Math.random() * (canvas1.width - width - 30) + 15;
+
+  platforms.push({
+    x: x,
+    y: yPos,
+    width: width,
+    height: 18,
+    isFake: isFake,
+    text: text,
+    broken: false
+  });
+}
+
+function updateGame1() {
+  // Movimiento horizontal del jugador
+  if (g1LeftPressed) player.vx = -player.speed;
+  else if (g1RightPressed) player.vx = player.speed;
+  else player.vx = 0;
+
+  player.x += player.vx;
+
+  // Pantalla infinita lateral (wrap)
+  if (player.x < -player.width) player.x = canvas1.width;
+  if (player.x > canvas1.width) player.x = -player.width;
+
+  // Gravedad y Física
+  player.vy += player.gravity;
+  player.y += player.vy;
+
+  if (g1Invincible > 0) g1Invincible--;
+
+  // Desplazamiento de cámara cuando el jugador sube
+  if (player.y < 220 && player.vy < 0) {
+    const diff = 220 - player.y;
+    player.y = 220;
+    g1Score += Math.round(diff / 5);
+    document.getElementById('g1Score').textContent = g1Score;
+
+    platforms.forEach(p => { p.y += diff; });
+  }
+
+  // Comprobar si las plataformas caen fuera de pantalla y crear nuevas arriba a 45px
+  for (let i = platforms.length - 1; i >= 0; i--) {
+    let p = platforms[i];
+    if (p.y > canvas1.height) {
+      platforms.splice(i, 1);
+      // Encontrar la plataforma más alta para poner la nueva 45px arriba
+      let highestY = Math.min(...platforms.map(pl => pl.y));
+      spawnPlatform(highestY - 45);
+    }
+  }
+
+  // Colisión con Plataformas (solo al caer)
+  if (player.vy > 0) {
+    platforms.forEach(p => {
+      if (
+        !p.broken &&
+        player.x + player.width > p.x &&
+        player.x < p.x + p.width &&
+        player.y + player.height >= p.y &&
+        player.y + player.height <= p.y + p.height + 14
+      ) {
+        if (p.isFake) {
+          // Plataforma Trampa Fake News -> Se rompe
+          p.broken = true;
+          showToast(1, `💥 ¡Ojo! La plataforma ${p.text} era FAKE y se rompió.`);
+        } else {
+          // Plataforma Confiable -> Rebote seguro
+          player.vy = player.jumpStrength;
+        }
+      }
+    });
+  }
+
+  // Caída al vacío por el borde inferior
+  if (player.y > canvas1.height + 40) {
+    g1Lives--;
+    document.getElementById('g1Lives').textContent = g1Lives;
+
+    if (g1Lives <= 0) {
+      handleG1GameOver();
+    } else {
+      showToast(1, '⚠️ ¡Caíste! Rescatado a plataforma segura (-1 Vida)');
+      // Respawn seguro en la plataforma confiable más cercana y visible
+      let safeP = platforms.find(p => !p.isFake && !p.broken && p.y > 100 && p.y < 380) || platforms[0];
+      if (safeP) safeP.broken = false;
+      player.x = (safeP ? safeP.x + safeP.width / 2 - 17 : canvas1.width / 2 - 17);
+      player.y = (safeP ? safeP.y - 45 : 250);
+      player.vy = player.jumpStrength;
+      g1Invincible = 60; // 1 segundo de aviso
+    }
+  }
+}
+
+function renderGame1() {
+  ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
+
+  // Fondo
+  ctx1.fillStyle = '#070a12';
+  ctx1.fillRect(0, 0, canvas1.width, canvas1.height);
+
+  // Rejilla Cyber-Neon
+  ctx1.strokeStyle = 'rgba(16, 185, 129, 0.08)';
+  ctx1.lineWidth = 1;
+  for (let x = 0; x < canvas1.width; x += 40) {
+    ctx1.beginPath(); ctx1.moveTo(x, 0); ctx1.lineTo(x, canvas1.height); ctx1.stroke();
+  }
+
+  // Dibujar Plataformas
+  platforms.forEach(p => {
+    if (p.broken) return;
+
+    ctx1.save();
+    ctx1.shadowBlur = 10;
+
+    if (p.isFake) {
+      ctx1.shadowColor = '#ef4444';
+      ctx1.fillStyle = '#7f1d1d';
+      ctx1.strokeStyle = '#ef4444';
+    } else {
+      ctx1.shadowColor = '#10b981';
+      ctx1.fillStyle = '#064e3b';
+      ctx1.strokeStyle = '#10b981';
+    }
+
+    ctx1.lineWidth = 2;
+    ctx1.beginPath();
+    ctx1.roundRect(p.x, p.y, p.width, p.height, 8);
+    ctx1.fill();
+    ctx1.stroke();
+    ctx1.shadowBlur = 0;
+
+    // Texto de la plataforma
+    ctx1.fillStyle = '#ffffff';
+    ctx1.font = 'bold 12px sans-serif';
+    ctx1.textAlign = 'center';
+    ctx1.textBaseline = 'middle';
+    ctx1.fillText((p.isFake ? '✖ ' : '✔ ') + p.text, p.x + p.width / 2, p.y + p.height / 2);
+
+    ctx1.restore();
+  });
+
+  // Dibujar Personaje Agente Digital 🕵️‍♂️
+  ctx1.save();
+  ctx1.translate(player.x, player.y);
+
+  ctx1.shadowColor = '#00f0ff';
+  ctx1.shadowBlur = 12;
+
+  // Cuerpo
+  ctx1.fillStyle = '#2563eb';
+  ctx1.strokeStyle = '#00f0ff';
+  ctx1.lineWidth = 2;
+  ctx1.beginPath();
+  ctx1.roundRect(0, 0, player.width, player.height, 10);
+  ctx1.fill();
+  ctx1.stroke();
+  ctx1.shadowBlur = 0;
+
+  // Gafas de Detective
+  ctx1.fillStyle = '#0f172a';
+  ctx1.fillRect(4, 10, 24, 8);
+  ctx1.fillStyle = '#00f0ff';
+  ctx1.fillRect(6, 12, 8, 4);
+  ctx1.fillRect(18, 12, 8, 4);
+
+  // Sombrero de Detective
+  ctx1.fillStyle = '#1e293b';
+  ctx1.fillRect(-2, 2, player.width + 4, 4);
+  ctx1.fillRect(6, -6, 20, 8);
+
+  ctx1.restore();
+}
+
+function handleG1GameOver() {
+  g1Running = false;
+  document.getElementById('g1ModalTitle').innerHTML = '💥 Misión Terminada';
+  document.getElementById('g1ModalDesc').innerHTML = `Has perdido las 3 vidas.<br><br><b>Altura alcanzada:</b> <span style="font-size:22px;color:var(--neon-green);font-weight:900;">${g1Score} metros</span>.`;
+  document.getElementById('g1StartBtn').innerHTML = '<i class="fa-solid fa-rotate-right"></i> Volver a Intentar';
+  document.getElementById('g1Modal').style.display = 'flex';
+}
+
+function game1Loop() {
+  if (!g1Running) return;
+  updateGame1();
+  renderGame1();
+  g1AnimFrame = requestAnimationFrame(game1Loop);
+}
+
+function drawJumperStatic() { renderGame1(); }
+
+// Eventos de teclado
+window.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') g1LeftPressed = true;
+  if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') g1RightPressed = true;
+});
+
+window.addEventListener('keyup', e => {
+  if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') g1LeftPressed = false;
+  if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') g1RightPressed = false;
+});
+
+// Controles táctiles
+const setupBtn = (id, isLeft) => {
+  const btn = document.getElementById(id);
+  btn.addEventListener('mousedown', () => { if (isLeft) g1LeftPressed = true; else g1RightPressed = true; });
+  btn.addEventListener('mouseup', () => { if (isLeft) g1LeftPressed = false; else g1RightPressed = false; });
+  btn.addEventListener('touchstart', (e) => { e.preventDefault(); if (isLeft) g1LeftPressed = true; else g1RightPressed = true; });
+  btn.addEventListener('touchend', (e) => { e.preventDefault(); if (isLeft) g1LeftPressed = false; else g1RightPressed = false; });
+};
+setupBtn('g1LeftBtn', true);
+setupBtn('g1RightBtn', false);
+
+
+/* ==========================================================================
+   JUEGO 2: EL SELLO DEL DETECTIVE (DRAG & DROP Y SELLOS)
+   ========================================================================== */
+const CASES = [
+  {
+    title: '“Base secreta en la Luna controla todos los teléfonos del planeta”',
+    author: 'Anonimo123 / Sin autor',
+    domain: 'alertas-raras-24.biz',
+    isReliable: false,
+    reason: 'Es una teoría extravagante sin autor identificado y con dominio no seguro (.biz).'
+  },
+  {
+    title: '“Comenzará la campaña de vacunación infantil en centros escolares”',
+    author: 'Ministerio de Sanidad y Salud Pública',
+    domain: 'gobierno.gob.es',
+    isReliable: true,
+    reason: 'Proviene de un organismo oficial de salud con dominio gubernamental (.gob.es).'
+  },
+  {
+    title: '“Descubren un árbol que produce billetes de 50 euros en el parque”',
+    author: 'UsuarioDesconocido_99',
+    domain: 'ganadinerosinriesgo.net',
+    isReliable: false,
+    reason: 'Promete algo científicamente imposible de una fuente anónima.'
+  },
+  {
+    title: '“Informe anual sobre la conservación de bosques y biodiversidad”',
+    author: 'Instituto Nacional de Investigaciones Ambientales',
+    domain: 'investigacion-ambiental.edu',
+    isReliable: true,
+    reason: 'Está firmado por una institución académica seria y usa dominio de educación (.edu).'
+  },
+  {
+    title: '“Si reenvías este mensaje a 20 contactos ganarás una consola gratis”',
+    author: 'Cadena viral anónima',
+    domain: 'premios-urgentes-ya.click',
+    isReliable: false,
+    reason: 'Es una típica cadena de correo/chat engañosa que busca clicks.'
+  }
+];
+
+let cIndex = 0;
+let cScore = 0;
+
+function initGame2() {
+  cIndex = 0;
+  cScore = 0;
+  document.getElementById('g2Score').textContent = '0';
+  document.getElementById('g2Modal').style.display = 'none';
+  renderCase();
+}
+
+function renderCase() {
+  if (cIndex >= CASES.length) {
+    document.getElementById('g2ModalTitle').innerHTML = '🏆 ¡Investigación Completada!';
+    document.getElementById('g2ModalDesc').innerHTML = `Has clasificado todos los expedientes.<br><br><b>Puntuación de detective:</b> <span style="font-size:24px;color:var(--neon-green);font-weight:900;">${cScore} / 500 pts</span>.`;
+    document.getElementById('g2Modal').style.display = 'flex';
+    return;
+  }
+
+  const c = CASES[cIndex];
+  document.getElementById('cNumber').textContent = (cIndex + 1 < 10 ? '0' : '') + (cIndex + 1);
+  document.getElementById('cTitle').textContent = c.title;
+  document.getElementById('cAuthor').textContent = c.author;
+  document.getElementById('cDomain').textContent = c.domain;
+  document.getElementById('g2Progress').textContent = `${cIndex + 1} / ${CASES.length}`;
+
+  const mark = document.getElementById('stampedMark');
+  mark.className = 'stamped-mark';
+}
+
+function stampCase(stampedReliable) {
+  const c = CASES[cIndex];
+  const mark = document.getElementById('stampedMark');
+
+  if (stampedReliable) {
+    mark.textContent = 'CONFIABLE';
+    mark.className = 'stamped-mark show-reliable';
+  } else {
+    mark.textContent = 'FAKE';
+    mark.className = 'stamped-mark show-fake';
+  }
+
+  const isCorrect = (stampedReliable === c.isReliable);
+
+  if (isCorrect) {
+    cScore += 100;
+    document.getElementById('g2Score').textContent = cScore;
+    showToast(2, `✅ ¡Excelente análisis! ${c.reason}`, true);
+  } else {
+    showToast(2, `❌ ¡Ojo! ${c.reason}`);
+  }
+
+  setTimeout(() => {
+    cIndex++;
+    renderCase();
+  }, 1600);
+}
+
+// Drag and drop handlers para los sellos
+const stampReliableBtn = document.getElementById('stampReliableBtn');
+const stampFakeBtn = document.getElementById('stampFakeBtn');
+
+stampReliableBtn.addEventListener('dragstart', (e) => {
+  e.dataTransfer.setData('text/plain', 'reliable');
+});
+
+stampFakeBtn.addEventListener('dragstart', (e) => {
+  e.dataTransfer.setData('text/plain', 'fake');
+});
+
+function allowDropCase(e) {
+  e.preventDefault();
+}
+
+function dropStampCase(e) {
+  e.preventDefault();
+  const type = e.dataTransfer.getData('text/plain');
+  if (type === 'reliable') {
+    stampCase(true);
+  } else if (type === 'fake') {
+    stampCase(false);
+  }
+}
+
+window.addEventListener('load', () => {
+  drawJumperStatic();
+  initGame2();
+});
+</script>
+
+</body>
+</html>
