@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 3 · Minijuegos de Inteligencia Artificial</title>
+
+<!-- FontAwesome CDN para iconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* ==========================================================================
+   ESTILOS GENERALES Y TEMA CYBER-NEON (MÓDULO 3 - INTELIGENCIA ARTIFICIAL)
+   ========================================================================== */
+:root {
+  --bg-dark: #0b0f19;
+  --bg-card: #151c2c;
+  --bg-card-light: #1e293b;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --line-color: #334155;
+  
+  --neon-cyan: #00f0ff;
+  --neon-blue: #2563eb;
+  --neon-purple: #8b5cf6;
+  --neon-indigo: #6366f1;
+  --neon-pink: #ec4899;
+  --neon-green: #10b981;
+  --neon-red: #ef4444;
+  --neon-yellow: #f59e0b;
+
+  --shadow-purple: 0 0 20px rgba(139, 92, 246, 0.4);
+  --shadow-indigo: 0 0 20px rgba(99, 102, 241, 0.4);
+  --shadow-cyan: 0 0 20px rgba(0, 240, 255, 0.4);
+  --shadow-green: 0 0 20px rgba(16, 185, 129, 0.4);
+  --shadow-red: 0 0 20px rgba(239, 68, 68, 0.4);
+}
+
+* {
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+  background-color: var(--bg-dark);
+  background-image: 
+    radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12), transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(139, 92, 246, 0.12), transparent 40%);
+  color: var(--text-main);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.app-container {
+  max-width: 1100px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 16px;
+  background: rgba(21, 28, 44, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--line-color);
+  border-radius: 999px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--neon-indigo);
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 15px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  background: rgba(99, 102, 241, 0.2);
+  box-shadow: var(--shadow-indigo);
+  transform: translateY(-1px);
+}
+
+.brand-title {
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-title span {
+  color: var(--neon-indigo);
+  text-shadow: 0 0 10px var(--neon-indigo);
+}
+
+.tabs-nav {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.tab-btn {
+  flex: 1;
+  max-width: 380px;
+  padding: 14px 20px;
+  border: 2px solid var(--line-color);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-weight: 800;
+  font-size: 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.25s ease;
+}
+
+.tab-btn:hover {
+  border-color: var(--neon-indigo);
+  color: #fff;
+}
+
+.tab-btn.active {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+  border-color: var(--neon-indigo);
+  color: #fff;
+  box-shadow: var(--shadow-indigo);
+}
+
+.game-panel {
+  display: none;
+  background: var(--bg-card);
+  border: 2px solid var(--line-color);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  flex-direction: column;
+  gap: 16px;
+}
+
+.game-panel.active {
+  display: flex;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  border-bottom: 1px solid var(--line-color);
+  padding-bottom: 14px;
+}
+
+.game-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 900;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.game-stats {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.stat-badge {
+  background: var(--bg-card-light);
+  border: 1px solid var(--line-color);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stat-badge i { color: var(--neon-indigo); }
+.stat-badge.lives i { color: var(--neon-red); }
+.stat-badge.timer i { color: var(--neon-yellow); }
+.stat-badge.shield i { color: var(--neon-cyan); }
+
+.game-viewport {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #070a12;
+  border-radius: 20px;
+  border: 2px solid var(--line-color);
+  overflow: hidden;
+  min-height: 420px;
+}
+
+canvas {
+  display: block;
+  max-width: 100%;
+  background: transparent;
+}
+
+.dpad-container {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding-top: 10px;
+}
+
+.dpad-btn {
+  flex: 1;
+  max-width: 120px;
+  height: 52px;
+  background: var(--bg-card-light);
+  border: 2px solid var(--neon-indigo);
+  color: #fff;
+  border-radius: 16px;
+  font-size: 22px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dpad-btn:active {
+  background: var(--neon-indigo);
+  color: var(--bg-dark);
+}
+
+.modal-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(11, 15, 25, 0.92);
+  backdrop-filter: blur(6px);
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  padding: 24px; text-align: center; z-index: 100; border-radius: 20px;
+}
+
+.modal-card {
+  background: var(--bg-card);
+  border: 2px solid var(--neon-indigo);
+  border-radius: 20px;
+  padding: 24px;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: var(--shadow-indigo);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: popIn 0.3s ease;
+}
+
+.modal-card.warning { border-color: var(--neon-red); box-shadow: var(--shadow-red); }
+.modal-card.success { border-color: var(--neon-green); box-shadow: var(--shadow-green); }
+
+.modal-card h3 { margin: 0; font-size: 24px; color: #fff; }
+.modal-card p { margin: 0; font-size: 15px; color: var(--text-muted); line-height: 1.5; }
+
+.action-btn {
+  background: linear-gradient(135deg, var(--neon-indigo), var(--neon-purple));
+  color: #fff; border: none; border-radius: 14px; padding: 14px 24px;
+  font-size: 17px; font-weight: 800; cursor: pointer;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); transition: all 0.2s ease;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;
+}
+.action-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6); }
+
+.toast-alert {
+  position: absolute; top: 16px; left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  background: #ef4444; color: #fff; padding: 12px 20px; border-radius: 999px;
+  font-weight: 800; font-size: 15px; box-shadow: 0 8px 25px rgba(239, 68, 68, 0.5);
+  display: flex; align-items: center; gap: 10px; z-index: 120;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-align: center; max-width: 90%;
+}
+.toast-alert.show { transform: translateX(-50%) translateY(0); }
+.toast-alert.ok { background: #10b981; box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5); }
+
+/* ==========================================================================
+   ESTILOS PANTALLA DE BLOQUEO / CONTRASEÑA
+   ========================================================================== */
+.lock-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(11, 15, 25, 0.96);
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  text-align: center;
+  z-index: 150;
+  border-radius: 24px;
+}
+
+.lock-card {
+  background: var(--bg-card);
+  border: 2px solid var(--neon-indigo);
+  border-radius: 22px;
+  padding: 28px 24px;
+  max-width: 440px;
+  width: 100%;
+  box-shadow: var(--shadow-indigo);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  animation: popIn 0.3s ease;
+}
+
+.lock-icon {
+  width: 64px;
+  height: 64px;
+  background: rgba(99, 102, 241, 0.15);
+  border: 2px solid var(--neon-indigo);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: var(--neon-indigo);
+}
+
+.lock-card h3 {
+  margin: 0;
+  font-size: 22px;
+  color: #fff;
+  font-weight: 900;
+}
+
+.lock-card p {
+  margin: 0;
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.pass-input-group {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  margin-top: 6px;
+}
+
+.pass-input-group input {
+  flex: 1;
+  background: var(--bg-card-light);
+  border: 2px solid var(--line-color);
+  border-radius: 14px;
+  padding: 12px 16px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.pass-input-group input:focus {
+  border-color: var(--neon-indigo);
+}
+
+.pass-error {
+  color: var(--neon-red);
+  font-weight: 800;
+  font-size: 14px;
+  min-height: 20px;
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 768px) {
+  .topbar { border-radius: 16px; }
+  .brand-title { font-size: 15px; }
+  .tab-btn { font-size: 14px; padding: 10px 12px; }
+  .game-panel { padding: 14px; }
+}
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  
+  <header class="topbar">
+    <a href="modulo_3_ia.html" class="back-btn">
+      <i class="fa-solid fa-arrow-left"></i> Volver al Módulo 3
+    </a>
+    <div class="brand-title">
+      <i class="fa-solid fa-brain" style="color: var(--neon-indigo);"></i>
+      Módulo 3 · <span>Inteligencia Artificial</span>
+    </div>
+  </header>
+
+  <nav class="tabs-nav">
+    <button class="tab-btn active" id="tabGame1Btn" onclick="switchGame(1)">
+      <i class="fa-solid fa-shuttle-space"></i> 1. Patrulla Estelar: Salvando la IA
+    </button>
+    <button class="tab-btn" id="tabGame2Btn" onclick="switchGame(2)">
+      <i class="fa-solid fa-comment-slash"></i> 2. Detector de Alucinaciones
+    </button>
+  </nav>
+
+  <!-- ==========================================================================
+       JUEGO 1: PATRULLA ESTELAR: SALVANDO LA IA
+       ========================================================================== -->
+  <main class="game-panel active" id="game1Panel">
+    
+    <!-- Bloqueo por contraseña para Juego 1 -->
+    <div class="lock-overlay" id="g1LockOverlay">
+      <div class="lock-card">
+        <div class="lock-icon"><i class="fa-solid fa-lock"></i></div>
+        <h3>Acceso Protegido · Juego 1</h3>
+        <p>Introduce la contraseña proporcionada por tu profesor/a para comenzar:</p>
+        <div class="pass-input-group">
+          <input type="text" id="g1PassInput" placeholder="Contraseña..." autocomplete="off" onkeypress="if(event.key==='Enter') checkPass(1)">
+          <button class="action-btn" onclick="checkPass(1)"><i class="fa-solid fa-key"></i> Entrar</button>
+        </div>
+        <div class="pass-error" id="g1PassError"></div>
+      </div>
+    </div>
+
+    <div class="game-header">
+      <h2><i class="fa-solid fa-shuttle-space" style="color: var(--neon-indigo);"></i> Patrulla Estelar: Salvando la IA</h2>
+      <div class="game-stats">
+        <div class="stat-badge" title="Puntuación actual">
+          <i class="fa-solid fa-star"></i> Puntos: <span id="g1Score">0</span>
+        </div>
+        <div class="stat-badge lives" title="Vidas restantes">
+          <i class="fa-solid fa-heart"></i> <span id="g1Lives">3</span> / 3
+        </div>
+        <div class="stat-badge shield" id="g1ShieldBadge" style="display:none;">
+          <i class="fa-solid fa-shield-halved"></i> ¡Escudo activo!
+        </div>
+      </div>
+    </div>
+
+    <div class="game-viewport" id="g1Viewport">
+      <canvas id="starshipCanvas" width="700" height="420"></canvas>
+      <div class="toast-alert" id="g1Toast"><i class="fa-solid fa-circle-info"></i><span id="g1ToastMsg"></span></div>
+      
+      <div class="modal-overlay" id="g1Modal">
+        <div class="modal-card" id="g1ModalCard">
+          <i class="fa-solid fa-rocket" style="font-size: 50px; color: var(--neon-indigo);"></i>
+          <h3 id="g1ModalTitle">Patrulla Estelar: Salvando la IA</h3>
+          <p id="g1ModalDesc">
+            Pilota tu nave por el ciberespacio para alimentar la Inteligencia Artificial:<br><br>
+            🟢 <b>Datos de entrenamiento:</b> Reúnelos para sumar +100 pts.<br>
+            🔴 <b>Virus y Alucinaciones:</b> ¡Esquívalos! Restan 1 vida.<br>
+            ⚡ <b>Power-Ups del Prompt:</b> Colecta (Rol, Tarea, Contexto, Formato) para bonus y <b>Escudo protector de 3s</b>.<br><br>
+            <b>Controles:</b> Usa las flechas ⬆️ ⬇️ ⬅️ ➡️ o la cruceta en pantalla.
+          </p>
+          <button class="action-btn" id="g1StartBtn" onclick="initGame1()"><i class="fa-solid fa-play"></i> Despegar Nave</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="dpad-container">
+      <button class="dpad-btn" id="g1UpBtn"><i class="fa-solid fa-arrow-up"></i></button>
+      <button class="dpad-btn" id="g1DownBtn"><i class="fa-solid fa-arrow-down"></i></button>
+      <button class="dpad-btn" id="g1LeftBtn"><i class="fa-solid fa-arrow-left"></i></button>
+      <button class="dpad-btn" id="g1RightBtn"><i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </main>
+
+  <!-- ==========================================================================
+       JUEGO 2: EL DETECTOR DE ALUCINACIONES
+       ========================================================================== -->
+  <main class="game-panel" id="game2Panel">
+    
+    <!-- Bloqueo por contraseña para Juego 2 -->
+    <div class="lock-overlay" id="g2LockOverlay">
+      <div class="lock-card">
+        <div class="lock-icon"><i class="fa-solid fa-lock"></i></div>
+        <h3>Acceso Protegido · Juego 2</h3>
+        <p>Introduce la contraseña proporcionada por tu profesor/a para comenzar:</p>
+        <div class="pass-input-group">
+          <input type="text" id="g2PassInput" placeholder="Contraseña..." autocomplete="off" onkeypress="if(event.key==='Enter') checkPass(2)">
+          <button class="action-btn" onclick="checkPass(2)"><i class="fa-solid fa-key"></i> Entrar</button>
+        </div>
+        <div class="pass-error" id="g2PassError"></div>
+      </div>
+    </div>
+
+    <div class="game-header">
+      <h2><i class="fa-solid fa-comment-slash" style="color: var(--neon-purple);"></i> El Detector de Alucinaciones</h2>
+      <div class="game-stats">
+        <div class="stat-badge timer" title="Tiempo restante">
+          <i class="fa-solid fa-clock"></i> Tiempo: <span id="g2Timer">30</span>s
+        </div>
+        <div class="stat-badge lives" title="Vidas restantes">
+          <i class="fa-solid fa-heart"></i> <span id="g2Lives">3</span> / 3
+        </div>
+        <div class="stat-badge" title="Puntuación">
+          <i class="fa-solid fa-bullseye"></i> Alucinaciones destruidas: <span id="g2Score">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="game-viewport" id="g2Viewport">
+      <canvas id="detectorCanvas" width="700" height="420"></canvas>
+      <div class="toast-alert" id="g2Toast"><i class="fa-solid fa-circle-exclamation"></i><span id="g2ToastMsg"></span></div>
+      
+      <div class="modal-overlay" id="g2Modal">
+        <div class="modal-card" id="g2ModalCard">
+          <i class="fa-solid fa-robot" style="font-size: 50px; color: var(--neon-purple);"></i>
+          <h3 id="g2ModalTitle">El Detector de Alucinaciones</h3>
+          <p id="g2ModalDesc">
+            Las respuestas de la IA caen en burbujas de texto. ¡Analízalas rápido!<br><br>
+            💥 <b>Alucinaciones (Respuestas Falsas/Absurdas):</b> ¡Haz clic/tócalas para destruirlas antes de que toquen el suelo!<br>
+            ✅ <b>Verdades (Datos Correctos):</b> ¡NO las toques! Déjalas caer de forma segura.<br><br>
+            ⚠️ Perderás 1 vida si destruyes una Verdad o si dejas caer una Alucinación. ¡Sobrevive 30 segundos!
+          </p>
+          <button class="action-btn" id="g2StartBtn" onclick="initGame2()"><i class="fa-solid fa-play"></i> Iniciar Detector</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<script>
+/* ==========================================================================
+   SISTEMA DE CONTRASEÑAS POR MINIJUEGO
+   ========================================================================== */
+const PASSWORDS = {
+  1: 'salchichas voladoras',
+  2: 'tiburon electrico'
+};
+
+function normalizeStr(str) {
+  return str ? str.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') : '';
+}
+
+function checkPass(gameNum) {
+  const inputEl = document.getElementById(`g${gameNum}PassInput`);
+  const errorEl = document.getElementById(`g${gameNum}PassError`);
+  const overlayEl = document.getElementById(`g${gameNum}LockOverlay`);
+
+  const userVal = normalizeStr(inputEl.value);
+  const targetVal = normalizeStr(PASSWORDS[gameNum]);
+
+  if (userVal === targetVal) {
+    overlayEl.style.display = 'none';
+    sessionStorage.setItem(`m3_g${gameNum}_unlocked`, 'true');
+  } else {
+    errorEl.textContent = '🔒 Contraseña incorrecta. Pídesela a tu profesor/a.';
+    inputEl.style.borderColor = 'var(--neon-red)';
+    setTimeout(() => {
+      inputEl.style.borderColor = 'var(--line-color)';
+    }, 1500);
+  }
+}
+
+// Comprobar desbloqueo en sesión previa
+window.addEventListener('load', () => {
+  if (sessionStorage.getItem('m3_g1_unlocked') === 'true') {
+    document.getElementById('g1LockOverlay').style.display = 'none';
+  }
+  if (sessionStorage.getItem('m3_g2_unlocked') === 'true') {
+    document.getElementById('g2LockOverlay').style.display = 'none';
+  }
+});
+
+/* ==========================================================================
+   NAVEGACIÓN ENTRE PESTAÑAS
+   ========================================================================== */
+function switchGame(gameNum) {
+  document.getElementById('tabGame1Btn').classList.toggle('active', gameNum === 1);
+  document.getElementById('tabGame2Btn').classList.toggle('active', gameNum === 2);
+  document.getElementById('game1Panel').classList.toggle('active', gameNum === 1);
+  document.getElementById('game2Panel').classList.toggle('active', gameNum === 2);
+
+  if (gameNum === 1) {
+    if (g2Running) g2Running = false;
+    drawStarshipStatic();
+  } else {
+    if (g1Running) g1Running = false;
+    drawDetectorStatic();
+  }
+}
+
+function showToast(game, msg, isOk = false) {
+  const toast = document.getElementById(game === 1 ? 'g1Toast' : 'g2Toast');
+  const toastMsg = document.getElementById(game === 1 ? 'g1ToastMsg' : 'g2ToastMsg');
+  toastMsg.textContent = msg;
+  toast.className = 'toast-alert show' + (isOk ? ' ok' : '');
+  setTimeout(() => { toast.classList.remove('show'); }, 1800);
+}
+
+
+/* ==========================================================================
+   JUEGO 1: PATRULLA ESTELAR: SALVANDO LA IA (LOGICA GAME engine)
+   ========================================================================== */
+const canvas1 = document.getElementById('starshipCanvas');
+const ctx1 = canvas1.getContext('2d');
+
+let g1Score = 0;
+let g1Lives = 3;
+let g1Running = false;
+let g1AnimFrame = null;
+let g1ShieldTime = 0; // ms restantes de escudo
+
+let ship = { x: 80, y: 190, width: 44, height: 28, speed: 4.5 };
+let g1Keys = { Up: false, Down: false, Left: false, Right: false };
+let g1Entities = [];
+let g1SpawnTimer = 0;
+let g1SpeedMultiplier = 1.0;
+
+const PROMPT_PARTS = [
+  { name: 'Rol', color: '#3b82f6', desc: '¡Parte del Prompt: ROL (+150 pts + Escudo!)' },
+  { name: 'Tarea', color: '#8b5cf6', desc: '¡Parte del Prompt: TAREA (+150 pts + Escudo!)' },
+  { name: 'Contexto', color: '#ec4899', desc: '¡Parte del Prompt: CONTEXTO (+150 pts + Escudo!)' },
+  { name: 'Formato', color: '#f59e0b', desc: '¡Parte del Prompt: FORMATO (+150 pts + Escudo!)' }
+];
+
+const HAZARDS = ['Virus', 'Alucinación', 'Sesgo', 'Bug', 'Error'];
+
+function initGame1() {
+  g1Score = 0;
+  g1Lives = 3;
+  g1ShieldTime = 0;
+  g1SpeedMultiplier = 1.0;
+  ship.x = 80;
+  ship.y = canvas1.height / 2 - 14;
+  g1Entities = [];
+  g1SpawnTimer = 0;
+
+  document.getElementById('g1Score').textContent = '0';
+  document.getElementById('g1Lives').textContent = '3';
+  document.getElementById('g1ShieldBadge').style.display = 'none';
+  document.getElementById('g1Modal').style.display = 'none';
+
+  g1Running = true;
+  if (g1AnimFrame) cancelAnimationFrame(g1AnimFrame);
+  game1Loop();
+}
+
+function spawnG1Entity() {
+  const rand = Math.random();
+  let type = 'data';
+  let text = '';
+  let color = '';
+  let size = 20;
+  let speed = (1.1 + Math.random() * 0.7) * g1SpeedMultiplier;
+
+  if (rand < 0.55) {
+    // Esfera Verde: Dato de Entrenamiento
+    type = 'data';
+    text = 'Dato';
+    color = '#10b981';
+    size = 18;
+  } else if (rand < 0.85) {
+    // Peligro: Virus / Alucinación
+    type = 'hazard';
+    text = HAZARDS[Math.floor(Math.random() * HAZARDS.length)];
+    color = '#ef4444';
+    size = 24;
+  } else {
+    // Power up de Prompt
+    type = 'powerup';
+    const p = PROMPT_PARTS[Math.floor(Math.random() * PROMPT_PARTS.length)];
+    text = p.name;
+    color = p.color;
+    size = 22;
+  }
+
+  const y = Math.random() * (canvas1.height - 60) + 30;
+  g1Entities.push({
+    x: canvas1.width + 30,
+    y: y,
+    type: type,
+    text: text,
+    color: color,
+    size: size,
+    speed: speed,
+    angle: 0
+  });
+}
+
+function updateGame1() {
+  // Incrementar velocidad gradualmente pero suave
+  g1SpeedMultiplier += 0.0001;
+
+  // Actualizar Escudo
+  if (g1ShieldTime > 0) {
+    g1ShieldTime -= 16.6;
+    if (g1ShieldTime <= 0) {
+      g1ShieldTime = 0;
+      document.getElementById('g1ShieldBadge').style.display = 'none';
+    }
+  }
+
+  // Movimiento Nave
+  if (g1Keys.Up && ship.y > 10) ship.y -= ship.speed;
+  if (g1Keys.Down && ship.y + ship.height < canvas1.height - 10) ship.y += ship.speed;
+  if (g1Keys.Left && ship.x > 10) ship.x -= ship.speed;
+  if (g1Keys.Right && ship.x + ship.width < canvas1.width - 10) ship.x += ship.speed;
+
+  // Generación de Entidades (más pausada para niños)
+  g1SpawnTimer++;
+  if (g1SpawnTimer >= 70) {
+    spawnG1Entity();
+    g1SpawnTimer = 0;
+  }
+
+  // Actualización de Entidades y Colisiones
+  for (let i = g1Entities.length - 1; i >= 0; i--) {
+    let e = g1Entities[i];
+    e.x -= e.speed;
+    e.angle += 0.05;
+
+    // Colisión con la Nave
+    if (
+      ship.x < e.x + e.size &&
+      ship.x + ship.width > e.x - e.size &&
+      ship.y < e.y + e.size &&
+      ship.y + ship.height > e.y - e.size
+    ) {
+      if (e.type === 'data') {
+        g1Score += 100;
+        document.getElementById('g1Score').textContent = g1Score;
+      } else if (e.type === 'powerup') {
+        g1Score += 150;
+        g1ShieldTime = 3000; // 3 segundos de escudo
+        document.getElementById('g1Score').textContent = g1Score;
+        document.getElementById('g1ShieldBadge').style.display = 'inline-flex';
+        showToast(1, `⚡ ¡Recogiste ${e.text}! Escudo de 3s activado (+150 pts)`, true);
+      } else if (e.type === 'hazard') {
+        if (g1ShieldTime > 0) {
+          showToast(1, '🛡️ ¡Escudo absorbió el ataque!', true);
+        } else {
+          g1Lives--;
+          document.getElementById('g1Lives').textContent = g1Lives;
+          showToast(1, `💥 ¡Chocaste contra un ${e.text}! (-1 Vida)`);
+          if (g1Lives <= 0) {
+            handleG1GameOver();
+          }
+        }
+      }
+      g1Entities.splice(i, 1);
+      continue;
+    }
+
+    // Remover al salir de pantalla
+    if (e.x < -40) {
+      g1Entities.splice(i, 1);
+    }
+  }
+}
+
+function renderGame1() {
+  ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
+
+  // Fondo Espacial
+  ctx1.fillStyle = '#070a12';
+  ctx1.fillRect(0, 0, canvas1.width, canvas1.height);
+
+  // Rejilla de Fondo Estelar
+  ctx1.strokeStyle = 'rgba(99, 102, 241, 0.08)';
+  ctx1.lineWidth = 1;
+  for (let x = 0; x < canvas1.width; x += 40) {
+    ctx1.beginPath(); ctx1.moveTo(x, 0); ctx1.lineTo(x, canvas1.height); ctx1.stroke();
+  }
+
+  // Dibujar Nave Espacial
+  ctx1.save();
+  ctx1.translate(ship.x, ship.y);
+
+  // Fuego de los propulsores
+  ctx1.fillStyle = Math.random() > 0.5 ? '#ff4500' : '#ff8c00';
+  ctx1.beginPath();
+  ctx1.moveTo(-10, 8);
+  ctx1.lineTo(-24 - Math.random() * 8, 14);
+  ctx1.lineTo(-10, 20);
+  ctx1.closePath();
+  ctx1.fill();
+
+  // Escudo visual si está activo
+  if (g1ShieldTime > 0) {
+    ctx1.strokeStyle = '#00f0ff';
+    ctx1.shadowColor = '#00f0ff';
+    ctx1.shadowBlur = 15;
+    ctx1.lineWidth = 3;
+    ctx1.beginPath();
+    ctx1.arc(ship.width / 2, ship.height / 2, 28, 0, Math.PI * 2);
+    ctx1.stroke();
+    ctx1.shadowBlur = 0;
+  }
+
+  // Cuerpo de la Nave
+  ctx1.fillStyle = '#4f46e5';
+  ctx1.strokeStyle = '#818cf8';
+  ctx1.lineWidth = 2;
+  ctx1.beginPath();
+  ctx1.moveTo(0, 0);
+  ctx1.lineTo(ship.width, ship.height / 2);
+  ctx1.lineTo(0, ship.height);
+  ctx1.lineTo(8, ship.height / 2);
+  ctx1.closePath();
+  ctx1.fill();
+  ctx1.stroke();
+
+  // Cabina de Cristal
+  ctx1.fillStyle = '#00f0ff';
+  ctx1.beginPath();
+  ctx1.arc(22, ship.height / 2, 6, 0, Math.PI * 2);
+  ctx1.fill();
+  ctx1.restore();
+
+  // Dibujar Entidades
+  g1Entities.forEach(e => {
+    ctx1.save();
+    ctx1.translate(e.x, e.y);
+
+    if (e.type === 'data') {
+      // Esfera Verde de Datos
+      ctx1.fillStyle = '#10b981';
+      ctx1.shadowColor = '#10b981';
+      ctx1.shadowBlur = 12;
+      ctx1.beginPath();
+      ctx1.arc(0, 0, e.size, 0, Math.PI * 2);
+      ctx1.fill();
+      ctx1.shadowBlur = 0;
+
+      ctx1.fillStyle = '#ffffff';
+      ctx1.font = 'bold 11px sans-serif';
+      ctx1.textAlign = 'center';
+      ctx1.textBaseline = 'middle';
+      ctx1.fillText('DATOS', 0, 0);
+    } else if (e.type === 'hazard') {
+      // Asteroide / Virus Rojo
+      ctx1.rotate(e.angle);
+      ctx1.fillStyle = '#991b1b';
+      ctx1.strokeStyle = '#ef4444';
+      ctx1.shadowColor = '#ef4444';
+      ctx1.shadowBlur = 12;
+      ctx1.lineWidth = 2;
+
+      // Forma estrellada/irregular
+      ctx1.beginPath();
+      for (let i = 0; i < 6; i++) {
+        let r = i % 2 === 0 ? e.size : e.size * 0.55;
+        let a = (i * Math.PI) / 3;
+        let px = Math.cos(a) * r;
+        let py = Math.sin(a) * r;
+        if (i === 0) ctx1.moveTo(px, py); else ctx1.lineTo(px, py);
+      }
+      ctx1.closePath();
+      ctx1.fill();
+      ctx1.stroke();
+      ctx1.shadowBlur = 0;
+
+      ctx1.rotate(-e.angle);
+      ctx1.fillStyle = '#ffffff';
+      ctx1.font = 'bold 10px sans-serif';
+      ctx1.textAlign = 'center';
+      ctx1.textBaseline = 'middle';
+      ctx1.fillText(e.text, 0, 0);
+    } else if (e.type === 'powerup') {
+      // Power Up de Prompt
+      ctx1.fillStyle = e.color;
+      ctx1.shadowColor = e.color;
+      ctx1.shadowBlur = 14;
+      ctx1.beginPath();
+      ctx1.roundRect(-e.size, -e.size + 4, e.size * 2, e.size * 1.5, 8);
+      ctx1.fill();
+      ctx1.shadowBlur = 0;
+
+      ctx1.fillStyle = '#ffffff';
+      ctx1.font = 'bold 11px sans-serif';
+      ctx1.textAlign = 'center';
+      ctx1.textBaseline = 'middle';
+      ctx1.fillText('PROMPT', 0, -3);
+      ctx1.font = '900 10px sans-serif';
+      ctx1.fillText(e.text, 0, 7);
+    }
+
+    ctx1.restore();
+  });
+}
+
+function handleG1GameOver() {
+  g1Running = false;
+  document.getElementById('g1ModalTitle').innerHTML = '💥 Misión Terminada';
+  document.getElementById('g1ModalDesc').innerHTML = `Has perdido tus 3 vidas.<br><br><b>Puntuación acumulada:</b> <span style="font-size:22px;color:var(--neon-indigo);font-weight:900;">${g1Score} puntos</span>.`;
+  document.getElementById('g1StartBtn').innerHTML = '<i class="fa-solid fa-rotate-right"></i> Volver a Intentar';
+  document.getElementById('g1Modal').style.display = 'flex';
+}
+
+function game1Loop() {
+  if (!g1Running) return;
+  updateGame1();
+  renderGame1();
+  g1AnimFrame = requestAnimationFrame(game1Loop);
+}
+
+function drawStarshipStatic() { renderGame1(); }
+
+// Controles Teclado
+window.addEventListener('keydown', e => {
+  if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') g1Keys.Up = true;
+  if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') g1Keys.Down = true;
+  if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') g1Keys.Left = true;
+  if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') g1Keys.Right = true;
+});
+
+window.addEventListener('keyup', e => {
+  if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') g1Keys.Up = false;
+  if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') g1Keys.Down = false;
+  if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') g1Keys.Left = false;
+  if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') g1Keys.Right = false;
+});
+
+// Controles Táctiles/Botones
+const setupDpad = (id, key) => {
+  const btn = document.getElementById(id);
+  btn.addEventListener('mousedown', () => g1Keys[key] = true);
+  btn.addEventListener('mouseup', () => g1Keys[key] = false);
+  btn.addEventListener('touchstart', (e) => { e.preventDefault(); g1Keys[key] = true; });
+  btn.addEventListener('touchend', (e) => { e.preventDefault(); g1Keys[key] = false; });
+};
+setupDpad('g1UpBtn', 'Up');
+setupDpad('g1DownBtn', 'Down');
+setupDpad('g1LeftBtn', 'Left');
+setupDpad('g1RightBtn', 'Right');
+
+
+/* ==========================================================================
+   JUEGO 2: EL DETECTOR DE ALUCINACIONES (LOGICA GAME ENGINE)
+   ========================================================================== */
+const canvas2 = document.getElementById('detectorCanvas');
+const ctx2 = canvas2.getContext('2d');
+
+let g2Score = 0;
+let g2Lives = 3;
+let g2TimeLeft = 30;
+let g2Running = false;
+let g2AnimFrame = null;
+let g2TimerInterval = null;
+let g2Bubbles = [];
+let g2SpawnTimer = 0;
+
+const TRUTHS = [
+  "El sol da calor",
+  "Lleva bañador a la playa",
+  "Los perros ladran",
+  "La tierra gira al sol",
+  "El agua congela a 0°C",
+  "Los pájaros tienen plumas",
+  "El hielo es frío",
+  "Los árboles dan oxígeno"
+];
+
+const HALLUCINATIONS = [
+  "Lleva abrigo de nieve a la playa",
+  "Los perros son magdalenas",
+  "Los gatos vuelan",
+  "La luna está hecha de queso",
+  "Los peces leen periódicos",
+  "Las rocas comen espaguetis",
+  "La lluvia cae hacia arriba",
+  "El sol es un helado verde"
+];
+
+function initGame2() {
+  g2Score = 0;
+  g2Lives = 3;
+  g2TimeLeft = 30;
+  g2Bubbles = [];
+  g2SpawnTimer = 0;
+
+  document.getElementById('g2Score').textContent = '0';
+  document.getElementById('g2Lives').textContent = '3';
+  document.getElementById('g2Timer').textContent = '30';
+  document.getElementById('g2Modal').style.display = 'none';
+
+  g2Running = true;
+  if (g2AnimFrame) cancelAnimationFrame(g2AnimFrame);
+  if (g2TimerInterval) clearInterval(g2TimerInterval);
+
+  g2TimerInterval = setInterval(() => {
+    if (!g2Running) return;
+    g2TimeLeft--;
+    document.getElementById('g2Timer').textContent = g2TimeLeft;
+    if (g2TimeLeft <= 0) {
+      handleG2Win();
+    }
+  }, 1000);
+
+  game2Loop();
+}
+
+function spawnG2Bubble() {
+  const isHallucination = Math.random() > 0.5;
+  const textArray = isHallucination ? HALLUCINATIONS : TRUTHS;
+  const text = textArray[Math.floor(Math.random() * textArray.length)];
+
+  ctx2.font = 'bold 13px sans-serif';
+  const textWidth = ctx2.measureText(text).width;
+  const width = Math.max(160, textWidth + 36);
+  const height = 44;
+  const x = Math.random() * (canvas2.width - width - 20) + 10;
+
+  g2Bubbles.push({
+    x: x,
+    y: -height,
+    width: width,
+    height: height,
+    text: text,
+    isHallucination: isHallucination,
+    speed: 0.45 + Math.random() * 0.35
+  });
+}
+
+function updateGame2() {
+  g2SpawnTimer++;
+  if (g2SpawnTimer >= 90) {
+    spawnG2Bubble();
+    g2SpawnTimer = 0;
+  }
+
+  for (let i = g2Bubbles.length - 1; i >= 0; i--) {
+    let b = g2Bubbles[i];
+    b.y += b.speed;
+
+    // Si la burbuja toca el suelo
+    if (b.y > canvas2.height) {
+      if (b.isHallucination) {
+        // Dejó caer una alucinación -> Pierde vida
+        g2Lives--;
+        document.getElementById('g2Lives').textContent = g2Lives;
+        showToast(2, `💥 Se escapó una alucinación: "${b.text}" (-1 Vida)`);
+        if (g2Lives <= 0) handleG2GameOver();
+      } else {
+        // Dejó caer una verdad -> Correcto (no pasa nada malo)
+      }
+      g2Bubbles.splice(i, 1);
+    }
+  }
+}
+
+function renderGame2() {
+  ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+
+  // Fondo
+  ctx2.fillStyle = '#070a12';
+  ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
+
+  // Rejilla de Fondo
+  ctx2.strokeStyle = 'rgba(139, 92, 246, 0.08)';
+  ctx2.lineWidth = 1;
+  for (let y = 0; y < canvas2.height; y += 40) {
+    ctx2.beginPath(); ctx2.moveTo(0, y); ctx2.lineTo(canvas2.width, y); ctx2.stroke();
+  }
+
+  // Dibujar Burbujas
+  g2Bubbles.forEach(b => {
+    ctx2.save();
+    
+    // Sombra neón según tipo (alucinación = rojo/purpura, verdad = azul)
+    if (b.isHallucination) {
+      ctx2.shadowColor = '#ec4899';
+      ctx2.fillStyle = '#831843';
+      ctx2.strokeStyle = '#f472b6';
+    } else {
+      ctx2.shadowColor = '#3b82f6';
+      ctx2.fillStyle = '#1e3a8a';
+      ctx2.strokeStyle = '#60a5fa';
+    }
+
+    ctx2.shadowBlur = 10;
+    ctx2.lineWidth = 2;
+
+    // Dibujar Burbuja de Chat
+    ctx2.beginPath();
+    ctx2.roundRect(b.x, b.y, b.width, b.height, 14);
+    ctx2.fill();
+    ctx2.stroke();
+    ctx2.shadowBlur = 0;
+
+    // Texto de la burbuja
+    ctx2.fillStyle = '#ffffff';
+    ctx2.font = 'bold 13px sans-serif';
+    ctx2.textAlign = 'center';
+    ctx2.textBaseline = 'middle';
+    ctx2.fillText(b.text, b.x + b.width / 2, b.y + b.height / 2);
+
+    ctx2.restore();
+  });
+}
+
+// Click en el Canvas
+canvas2.addEventListener('click', (e) => {
+  if (!g2Running) return;
+
+  const rect = canvas2.getBoundingClientRect();
+  const scaleX = canvas2.width / rect.width;
+  const scaleY = canvas2.height / rect.height;
+  const clickX = (e.clientX - rect.left) * scaleX;
+  const clickY = (e.clientY - rect.top) * scaleY;
+
+  for (let i = g2Bubbles.length - 1; i >= 0; i--) {
+    let b = g2Bubbles[i];
+    if (
+      clickX >= b.x &&
+      clickX <= b.x + b.width &&
+      clickY >= b.y &&
+      clickY <= b.y + b.height
+    ) {
+      if (b.isHallucination) {
+        // Destruyó alucinación correctamente -> +1 Punto
+        g2Score++;
+        document.getElementById('g2Score').textContent = g2Score;
+        showToast(2, `🎯 ¡Alucinación destruida! (${b.text})`, true);
+      } else {
+        // Destruyó una Verdad -> Pierde vida
+        g2Lives--;
+        document.getElementById('g2Lives').textContent = g2Lives;
+        showToast(2, `❌ ¡Era una VERDAD! No debías destruirla (${b.text}) (-1 Vida)`);
+        if (g2Lives <= 0) handleG2GameOver();
+      }
+      g2Bubbles.splice(i, 1);
+      break;
+    }
+  }
+});
+
+function handleG2GameOver() {
+  g2Running = false;
+  if (g2TimerInterval) clearInterval(g2TimerInterval);
+  document.getElementById('g2ModalTitle').innerHTML = '💥 Detector Desactivado';
+  document.getElementById('g2ModalDesc').innerHTML = `Has acumulado 3 errores.<br><br><b>Alucinaciones destruidas:</b> <span style="font-size:22px;color:var(--neon-purple);font-weight:900;">${g2Score}</span>.`;
+  document.getElementById('g2StartBtn').innerHTML = '<i class="fa-solid fa-rotate-right"></i> Intentar de Nuevo';
+  document.getElementById('g2Modal').style.display = 'flex';
+}
+
+function handleG2Win() {
+  g2Running = false;
+  if (g2TimerInterval) clearInterval(g2TimerInterval);
+  document.getElementById('g2ModalTitle').innerHTML = '🏆 ¡Misión Cumplida!';
+  document.getElementById('g2ModalDesc').innerHTML = `¡Has sobrevivido 30 segundos protegiendo a la IA de datos falsos!<br><br><b>Alucinaciones destruidas:</b> <span style="font-size:24px;color:var(--neon-green);font-weight:900;">${g2Score}</span>.`;
+  document.getElementById('g2StartBtn').innerHTML = '<i class="fa-solid fa-award"></i> Jugar Otra Vez';
+  document.getElementById('g2Modal').style.display = 'flex';
+}
+
+function game2Loop() {
+  if (!g2Running) return;
+  updateGame2();
+  renderGame2();
+  g2AnimFrame = requestAnimationFrame(game2Loop);
+}
+
+function drawDetectorStatic() { renderGame2(); }
+
+window.addEventListener('load', () => {
+  drawStarshipStatic();
+});
+</script>
+
+</body>
+</html>
